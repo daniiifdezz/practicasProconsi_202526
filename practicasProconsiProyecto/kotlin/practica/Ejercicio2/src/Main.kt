@@ -28,6 +28,9 @@ fun main() {
     println("El número de palabras repetidas es: ${listaRepetidas.size}")
     println("Las palabras repetidas son: ${listaRepetidas.joinToString(" ")}")
 
+
+    println ("Texto reemplazado Proconsi, por Insocorp: \n ${invertirCadena(text, "Proconsi", "Insocorp")}")
+
 }
 
 fun contarCaracteres(texto: String): Int {
@@ -64,6 +67,13 @@ fun obtenerPalabrasRepetidas(texto: String): List<String> {
     }
 
     return repetidas
+}
+
+
+fun invertirCadena(texto: String, original: String, nuevo: String): String {
+    
+    return texto.replace(original, nuevo)
+
 }
 
 
