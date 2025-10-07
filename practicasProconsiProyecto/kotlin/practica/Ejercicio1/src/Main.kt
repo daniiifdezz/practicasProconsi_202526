@@ -19,8 +19,12 @@ fun main() {
     println("Introduce el segundo digito:")
     val n2 = readln().toDouble()
 
+    //Para el redondeo
+    println("Introduce el número de digitos para redondear:")
+    val decimales = readln().toInt()
 
-    //val redondeo
+
+
 
     //Operaciones matemáticas
     val suma = n1 + n2
@@ -29,19 +33,20 @@ fun main() {
     val multiplicacion = n1 * n2
     val modulo = n1 % n2
 
-    //Salida por pantalla de las operaciones
-    println("La suma es: $suma")
-    println("La resta es: $resta")
-    println("La division es: $division")
-    println("La multiplicacion es: $multiplicacion")
-    println("El modulo es: $modulo")
 
+
+    //Salida por pantalla de las operaciones
+    println("La suma es: ${"%.${decimales}f".format(suma)}")
+    println("La resta es: ${"%.${decimales}f".format(resta)}")
+    println("La division es: ${"%.${decimales}f".format(division)}")
+    println("La multiplicacion es: ${"%.${decimales}f".format(multiplicacion)}")
+    println("El modulo es: ${"%.${decimales}f".format(modulo)}")
 
     //Comparaciones
     if (n1 > n2) {
-        println("El primer numero es mayor")
+        println("El primer número es mayor")
     } else if (n1 < n2) {
-        println("El primer numero es menor")
+        println("El primer número es menor")
     } else {
         println("El primer número es igual al segundo número")
     }
