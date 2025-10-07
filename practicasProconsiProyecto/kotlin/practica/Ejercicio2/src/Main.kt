@@ -1,3 +1,5 @@
+import kotlin.time.Duration
+import kotlin.time.measureTime
 
 /**
  * Con el siguiente texto de ejemplo mostrar:
@@ -15,21 +17,23 @@ fun main() {
 
     // Número de caracteres
     val characters = contarCaracteres(text)
-    println("El número de caracteres que hay en el texto es de $characters")
+    println("El número de caracteres que hay en el texto es de $characters \n")
 
     // Texto en mayúsculas y minúsculas
     val text_mayusculas = convertirMayusculas(text)
     val text_minusculas = convertirMinusculas(text)
-    println("El texto en mayusculas es: $text_mayusculas")
-    println("El texto en minusculas es: $text_minusculas")
+    println("El texto en mayusculas es: $text_mayusculas \n")
+    println("El texto en minusculas es: $text_minusculas \n")
 
     // Palabras repetidas
     val listaRepetidas = obtenerPalabrasRepetidas(text)
-    println("El número de palabras repetidas es: ${listaRepetidas.size}")
-    println("Las palabras repetidas son: ${listaRepetidas.joinToString(" ")}")
+    println("El número de palabras repetidas es: ${listaRepetidas.size}\n")
+    println("Las palabras repetidas son: ${listaRepetidas.joinToString(" ")}\n")
 
 
-    println ("Texto reemplazado Proconsi, por Insocorp: \n ${invertirCadena(text, "Proconsi", "Insocorp")}")
+    println ("Texto reemplazado Proconsi, por Insocorp: \n ${invertirCadena(text, "Proconsi", "Insocorp")}\n")
+
+    println ("El texto tarda: ${tiempoConcatenar(text)} y tiene un total de: ${concatenar(text)} palabras.\n")
 
 }
 
@@ -71,9 +75,27 @@ fun obtenerPalabrasRepetidas(texto: String): List<String> {
 
 
 fun invertirCadena(texto: String, original: String, nuevo: String): String {
-    
+
     return texto.replace(original, nuevo)
 
+}
+
+fun concatenar(texto: String): Int {
+
+
+    val textoRepetidoNVeces = texto.repeat(1000)
+    val numeroPalabras = textoRepetidoNVeces.count()
+    return numeroPalabras
+
+
+}
+
+fun tiempoConcatenar(texto: String): Duration {
+
+    val tiempo = measureTime {
+        concatenar(texto)
+    }
+    return tiempo
 }
 
 
