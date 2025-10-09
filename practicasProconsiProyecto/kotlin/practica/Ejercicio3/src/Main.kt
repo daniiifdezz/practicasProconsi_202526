@@ -2,7 +2,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
+import java.time.temporal.WeekFields
 import java.util.Date
+import java.util.Locale
 
 /**Introducción de 2 fechas con el siguiente formato yyyy/MM/dd me calcule:
 -	Diferencia de días entre las 2 fechas
@@ -23,25 +25,29 @@ fun main() {
 
     val entrada2:String= readLine()!!
 
+    val formato = DateTimeFormatter.ofPattern("yyyy/MM/dd")
 
-    diferenciaFechas(entrada1,entrada2)
+    try {
+        val fecha1 = LocalDate.parse(entrada1, formato)
+        val fecha2 = LocalDate.parse(entrada2, formato)
 
-    principioFinFechas(entrada1,entrada2)
+        diferenciaFechas(fecha1,fecha2)
+
+        principioFinFechas(fecha1,fecha2)
+
+        numeroDiasAnio(fecha1,fecha2)
+
+        numSemanaAnio(fecha1, fecha2)
+    }catch (e:DateTimeParseException){
+        println("Debes introducir el formato de la fecha correctamente.")
+    }
+
 
 
 }
 
 
-fun diferenciaFechas(entrada1: String, entrada2: String) {
-
-    val formato = DateTimeFormatter.ofPattern("yyyy/MM/dd")
-
-
-    if (!entrada1.isNullOrBlank()&& !entrada2.isNullOrBlank()) {
-        try{
-            //parseamos la entrada al formato indicado de la fecha
-            val fecha1 = LocalDate.parse(entrada1, formato)
-            val fecha2 = LocalDate.parse (entrada2, formato)
+fun diferenciaFechas(fecha1: LocalDate, fecha2: LocalDate) {
 
             //funcion de kotlin
             val diferenciaDias = ChronoUnit.DAYS.between(fecha1, fecha2)
@@ -54,26 +60,11 @@ fun diferenciaFechas(entrada1: String, entrada2: String) {
             }else{
                 println("Usted está en el mismo día, no hay diferencia de días.")
             }
-
-        }catch (e: DateTimeParseException){
-            println("El formato de alguna de las fechas es incorrecto.")
-        }
-    }
-    else{
-        println("Debe introducir la fechas por la terminal.")
-    }
-
 }
 
 
-fun principioFinFechas (entrada1: String, entrada2: String) {
 
-    val formato = DateTimeFormatter.ofPattern("yyyy/MM/dd")
-
-    if (!entrada1.isNullOrBlank()&& !entrada2.isNullOrBlank()) {
-        try{
-            val fecha1 = LocalDate.parse(entrada1, formato)
-            val fecha2 = LocalDate.parse (entrada2, formato)
+fun principioFinFechas (fecha1: LocalDate, fecha2: LocalDate) {
 
 
 
@@ -86,15 +77,33 @@ fun principioFinFechas (entrada1: String, entrada2: String) {
                 //println("Las fechas introducidas son diferentes.")
                 println("Inicio y fin de año para la primera fecha es de: $principioAño1 y de $finalAño1")
                 println("Inicio y fin de año para la segunda fecha es de: $principioAño2 y de $finalAño2")
+}
 
-        }catch (e: DateTimeParseException){
-            println("El formato de alguna de las fechas es incorrecto.")
-        }
-    }
-    else{
-        println("Debe introducir la fechas por la terminal.")
-    }
+
+fun numeroDiasAnio (fecha1: LocalDate, fecha2: LocalDate){
+
+
+            val numDias1:Int = fecha1.lengthOfYear()
+            val numDias2:Int = fecha2.lengthOfYear()
+
+
+            println("El número de días del año de la primera fecha es: $numDias1")
+            println("El número de días del año de la segunda fecha es: $numDias2")
+
 
 
 }
 
+fun numSemanaAnio (fecha1: LocalDate, fecha2: LocalDate){
+
+            val año1 = fecha1.year
+            val año2 = fecha2.year
+            val semanaAnio1 = fecha1.get(WeekFields.of(Locale.getDefault()).weekOfYear())
+            val semanaAnio2 = fecha2.get(WeekFields.of(Locale.getDefault()).weekOfYear())
+
+            println("Usted está en la semana $semanaAnio1 del año $año1")
+
+            println("Usted está en la semana $semanaAnio2 del año $año2")
+
+
+}
