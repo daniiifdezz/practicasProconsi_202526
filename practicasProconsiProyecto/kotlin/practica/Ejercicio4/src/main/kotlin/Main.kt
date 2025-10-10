@@ -8,7 +8,7 @@ fun main() {
 
         val dao = ClienteDAO(conexion)
 
-        // Crear un cliente usando los datos que quieras
+
         val cliente = Cliente(
             dni = "70334322V",
             nombre = "Pedro",
@@ -20,7 +20,11 @@ fun main() {
 
         dao.crear(cliente)
 
-        println("Cliente insertado correctamente")
+        dao.eliminarCliente("70334322V")
+
+        dao.consultarCliente ("70334322V")
+
+
     }
 
 }
