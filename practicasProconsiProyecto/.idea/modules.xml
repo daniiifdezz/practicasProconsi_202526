@@ -5,6 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/kotlin/practica/Ejercicio1/Ejercicio1.iml" filepath="$PROJECT_DIR$/kotlin/practica/Ejercicio1/Ejercicio1.iml" />
       <module fileurl="file://$PROJECT_DIR$/kotlin/practica/Ejercicio2/Ejercicio2.iml" filepath="$PROJECT_DIR$/kotlin/practica/Ejercicio2/Ejercicio2.iml" />
       <module fileurl="file://$PROJECT_DIR$/kotlin/practica/Ejercicio3/Ejercicio3.iml" filepath="$PROJECT_DIR$/kotlin/practica/Ejercicio3/Ejercicio3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Ejercicio4.iml" filepath="$PROJECT_DIR$/Ejercicio4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Ejercicio4.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Ejercicio4.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Ejercicio4.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Ejercicio4.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/practicasProconsiProyecto.iml" filepath="$PROJECT_DIR$/practicasProconsiProyecto.iml" />
     </modules>
   </component>
