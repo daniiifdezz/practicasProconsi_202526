@@ -1,4 +1,6 @@
 import java.sql.Connection
+import java.sql.Date
+import java.sql.Timestamp
 
 class ClienteDAO(val conexion: Connection){
 
@@ -34,12 +36,12 @@ class ClienteDAO(val conexion: Connection){
         val sql = """DELETE FROM clientes WHERE dni = ?"""
         conexion.prepareStatement(sql).use { ps ->
             ps.setString(1, dni)
-            val filaEliminada = ps.executeQuery()
+            val filaEliminada = ps.executeUpdate()
             println("Has eliminado a: $filaEliminada")
         }
     }
 
-    //para poder retornar null si no hay cliente con
+    //para poder retornar null si no hay cliente con dni, ponemos ?
     fun consultarCliente(dni: String) : Cliente? {
         val sql = """SELECT * FROM clientes WHERE dni = ?"""
 
@@ -63,4 +65,28 @@ class ClienteDAO(val conexion: Connection){
     }
 
 
+    //dni  como parametro podria ser por fecha_alta tambien
+    fun listarClientes(orderBy: String = "dni"){
+
+        val sql = """SELECT * FROM clientes ORDER BY $orderBy ASC """
+
+        conexion.prepareStatement(sql).use { ps ->
+
+            val resultSet = ps.executeQuery()
+
+            while(resultSet.next()){
+                val cliente = Cliente(
+                    resultSet.getString("dni"),
+                    resultSet.getString("nombre"),
+                    resultSet.getString("apellidos"),
+                    resultSet.getString("tipo_cliente"),
+                    resultSet.getDouble("cuota_maxima"),
+                    resultSet.getDate("fecha_alta").toLocalDate()
+                )
+                println(cliente)
+            }
+
+        }
+
+    }
 }

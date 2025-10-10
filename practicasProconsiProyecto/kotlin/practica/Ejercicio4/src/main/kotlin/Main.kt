@@ -10,19 +10,25 @@ fun main() {
 
 
         val cliente = Cliente(
-            dni = "70334322V",
-            nombre = "Pedro",
-            apellidos = "Martín",
+            dni = "70834040V",
+            nombre = "Roberto",
+            apellidos = "García",
             tipo_cliente = "SOCIO",
-            cuota_maxima = 1000.0,
+            cuota_maxima = 299.0,
             fecha_alta = LocalDate.now()
         )
 
-        dao.crear(cliente)
+        //dao.crear(cliente)
 
-        dao.eliminarCliente("70334322V")
+        //dao.eliminarCliente("70834038V")
 
-        dao.consultarCliente ("70334322V")
+        //dao.consultarCliente ("70834037V")
+
+        //orderBy fecha:
+        dao.listarClientes(LocalDate.now().toString())
+
+        dao.listarClientes("dni")
+
 
 
     }
