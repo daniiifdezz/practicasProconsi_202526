@@ -18,15 +18,16 @@ fun main() {
             3. Editar cliente
             4. Eliminar cliente
             5. Listar clientes
-            6. Salir
-         
+            6. Salir 
+       
+            
             Elige una opción:
             """.trimIndent()
             )
             val opcion = readln().toIntOrNull()
-            when(opcion) {
+            when (opcion) {
                 1 -> {
-                    println ("DNI: ")
+                    println("DNI: ")
                     val dni = readln()
                     println("Nombre: ")
                     val nombre = readln()
@@ -35,9 +36,9 @@ fun main() {
                     print("Tipo de cliente (REGISTRADO/SOCIO): ")
                     val tipo = readln().uppercase()
 
-                    val cuota: Double? = if(tipo == "REGISTRADO"){
+                    val cuota: Double? = if (tipo == "REGISTRADO") {
                         50.0
-                    }else{
+                    } else {
                         null
                     }
 
@@ -52,35 +53,37 @@ fun main() {
                     dao.crear(cliente)
                     println("Cliente creado correctamente.")
                 }
+
                 2 -> {
-                    println ("DNI: ")
+                    println("DNI: ")
                     val dni = readln()
                     val cliente = dao.consultarCliente(dni)
 
 
                 }
+
                 3 -> {
-                    println ("DNI: ")
+                    println("DNI: ")
                     val dni = readln()
                     val clienteExistente = dao.consultarCliente(dni)
 
-                    if(clienteExistente==null){
+                    if (clienteExistente == null) {
                         println("El cliente no esta en la base de datos.")
                         continue
 
-                    }else{
+                    } else {
                         println("Nombre: ")
                         val nombre = readln()
                         println("Apellidos: ")
                         val apellidos = readln()
                         println("Tipo (REGISTRADO/SOCIO): ")
                         val tipo = readln().uppercase()
-                        val cuota = if(tipo == "REGISTRADO"){
+                        val cuota = if (tipo == "REGISTRADO") {
                             50.0
-                        }else{
+                        } else {
                             null
                         }
-                        val updateCliente = Cliente (
+                        val updateCliente = Cliente(
                             dni = dni,
                             nombre = nombre,
                             apellidos = apellidos,
@@ -95,12 +98,14 @@ fun main() {
 
 
                 }
+
                 4 -> {
-                    println ("DNI: ")
+                    println("DNI: ")
                     val dni = readln()
                     dao.eliminarCliente(dni)
                     println("Cliente eliminado correctamente.")
                 }
+
                 5 -> {
                     println("Ordenar por:")
                     println("1. DNI")
@@ -109,23 +114,26 @@ fun main() {
                         1 -> {
                             dao.listarClientes("dni")
                         }
+
                         2 -> {
                             dao.listarClientes("fecha_alta")
                         }
+
                         else -> dao.listarClientes("dni")
                     }
 
                 }
+
                 6 -> {
                     conexion.close()
                     break
                 }
+
                 else ->
-                    println ("Selecciona una opción válida.")
+                    println("Selecciona una opción válida.")
 
             }
         }
-
 
 
     }
