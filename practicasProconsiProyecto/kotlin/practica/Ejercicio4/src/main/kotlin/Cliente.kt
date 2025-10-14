@@ -5,6 +5,6 @@ data class Cliente(
     val nombre: String,
     val apellidos: String,
     val tipo_cliente: String,
-    val cuota_maxima: Double,
+    val cuota_maxima: Double?,
     val fecha_alta: LocalDate
 )
