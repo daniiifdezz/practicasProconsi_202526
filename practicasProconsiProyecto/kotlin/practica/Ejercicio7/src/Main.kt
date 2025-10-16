@@ -22,6 +22,7 @@ fun main() {
 
 }
 
+//contando operaciones como las matematicas y las conversiones de tipos
 fun esKaprekar(n:Int): Pair <Boolean, Int> {
     var operaciones = 0
     val cuadrado = n * n
@@ -30,10 +31,12 @@ fun esKaprekar(n:Int): Pair <Boolean, Int> {
 
     if (n < 1) {
         return Pair(false, operaciones)
+
     }
 
 
     val strCuadrado = cuadrado.toString()
+    operaciones ++
 
     for (i in 1 until strCuadrado.length){
         val pIzquierda = strCuadrado.substring(0, i).toInt()
