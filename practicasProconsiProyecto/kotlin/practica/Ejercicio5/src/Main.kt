@@ -1,4 +1,5 @@
 /**
+ * EJERCICIO 5:
  * ItemSeparator es una clase que filtra una determinada cadena de entrada sin procesar con el siguiente formato
  * "ItemName $$ ## ItemPrice $$ ## ItemQuantity" y lo almacena como estos atributos de clase:
  * -	name (String)
