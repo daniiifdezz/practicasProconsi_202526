@@ -43,7 +43,8 @@ fun generarFormas(circulos:Int, triangulos:Int, cuadrados:Int): List<Forma>{
     val rand = Random
     val formas = mutableListOf<Forma>()
 
-    //comprender esto:
+
+
     for (i in 1..circulos) {
         val radio = rand.nextInt(1, 11)
         val x = rand.nextInt(0, 100)
@@ -73,7 +74,6 @@ fun generarFormas(circulos:Int, triangulos:Int, cuadrados:Int): List<Forma>{
 
 }
 
-//aqui tenemos almacenadas en la lista todas las formas y queremos imprimirlas entonces:
 fun imprimirPantallaFormas (formas: List<Forma>){
 
     println("Formas por orden: ")
