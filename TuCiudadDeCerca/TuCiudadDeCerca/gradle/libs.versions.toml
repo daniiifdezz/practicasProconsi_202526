@@ -18,7 +18,7 @@ composeMultiplatform = "1.6.11"
 ktor_version = "2.3.12"
 kotlinx-datetime = "0.6.0"
 kotlinxSerialization = "1.7.1"
-kotlinx-io = "0.7.0"
+kotlinx-io-core = "0.3.0"
 
 
 room = "2.6.1"
@@ -55,7 +55,7 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 
 #io
 
-kotlinx-io = {module = "org.jetbrains.kotlinx:kotlinx-io", version.ref = "kotlinx-io" }
+kotlinx-io = {module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinx-io-core" }
 
 #serialization
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }

@@ -18,12 +18,14 @@ kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
+
     }
 
 
 
-
     jvm()
+
+
 
     sourceSets {
         androidMain.dependencies {
@@ -63,12 +65,6 @@ kotlin {
             implementation(libs.data.store)
             implementation(libs.data.store.preferences)
 
-
-
-
-
-
-
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -79,12 +75,11 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
         }
     }
-    dependencies {
-        "kspCommonMainMetadata"(libs.androidx.room.compiler)
-    }
+
 
 }
 
+//configuracion de android
 android {
     namespace = "org.dferna14.project"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -101,7 +96,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    room{
+    room {
         schemaDirectory("${projectDir}/schemas")
     }
 
@@ -121,11 +116,14 @@ android {
 
 
 dependencies {
-    debugImplementation(compose.uiTooling)
 
+    //dependencias ksp con room
+    "kspAndroid"(libs.androidx.room.compiler)
+    "kspJvm"(libs.androidx.room.compiler)
+
+    debugImplementation(compose.uiTooling)
     //navigation-compose
     implementation(libs.navigation.compose)
-
 
 
 }
