@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
 }
 
 
@@ -17,6 +19,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
+
 
 
 
@@ -52,6 +55,14 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
 
 
+            //room
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+
+            //dataStore
+            implementation("androidx.datastore:datastore:1.1.7")
+            implementation("androidx.datastore:datastore-preferences:1.1.7")
+
 
 
 
@@ -66,6 +77,9 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
         }
+    }
+    dependencies {
+        "kspCommonMainMetadata"(libs.androidx.room.compiler)
     }
 
 }
@@ -86,6 +100,11 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    room{
+        schemaDirectory("${projectDir}/schemas")
+    }
+
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -95,13 +114,18 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
 }
+
+
 
 dependencies {
     debugImplementation(compose.uiTooling)
 
     //navigation-compose
     implementation("androidx.navigation:navigation-compose:2.8.0")
+
+
 
 }
 
