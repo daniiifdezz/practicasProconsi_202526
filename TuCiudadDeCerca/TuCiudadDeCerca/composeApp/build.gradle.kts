@@ -7,7 +7,9 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.serialization)
 }
+
 
 kotlin {
     androidTarget {
@@ -15,13 +17,16 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
+
+
     jvm()
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -32,15 +37,37 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+
+            //KTOR
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+
+            //DATETIME
+            implementation(libs.kotlinx.datetime)
+
+            //io
+            implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.8.0")
+
+            //serializacion
+            implementation(libs.kotlinx.serialization.json)
+
+
+
+
+
+
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
         }
     }
+
 }
 
 android {
@@ -72,6 +99,10 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+
+    //navigation-compose
+    implementation("androidx.navigation:navigation-compose:2.8.0")
+
 }
 
 compose.desktop {
@@ -85,3 +116,11 @@ compose.desktop {
         }
     }
 }
+
+
+
+
+
+
+
+
