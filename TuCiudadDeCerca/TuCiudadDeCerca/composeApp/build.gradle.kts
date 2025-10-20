@@ -49,7 +49,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
 
             //io
-            implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.8.0")
+            implementation(libs.kotlinx.io)
 
             //serializacion
             implementation(libs.kotlinx.serialization.json)
@@ -60,8 +60,9 @@ kotlin {
             implementation(libs.androidx.sqlite.bundled)
 
             //dataStore
-            implementation("androidx.datastore:datastore:1.1.7")
-            implementation("androidx.datastore:datastore-preferences:1.1.7")
+            implementation(libs.data.store)
+            implementation(libs.data.store.preferences)
+
 
 
 
@@ -123,7 +124,7 @@ dependencies {
     debugImplementation(compose.uiTooling)
 
     //navigation-compose
-    implementation("androidx.navigation:navigation-compose:2.8.0")
+    implementation(libs.navigation.compose)
 
 
 
