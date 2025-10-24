@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import moe.tlaster.precompose.PreComposeApp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,8 +31,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import moe.tlaster.precompose.PreComposeApp
 import org.dferna14.project.domain.model.Elemento
 import org.dferna14.project.presentation.ElementoVM
+import org.dferna14.project.presentation.navigation.Nav
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -41,44 +44,26 @@ import tuciudaddecerca.composeapp.generated.resources.compose_multiplatform
 @Composable
 @Preview
 fun App(viewModel: ElementoVM = ElementoVM()) {
-    MaterialTheme {
-        val uiState by viewModel.uiState.collectAsState()
-        Scaffold(
-            topBar = { TopAppBar(title = { Text("Puntos de Interés") }) }
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
-                contentAlignment = Alignment.Center
-            ) {
-                if (uiState.isLoading) {
-                    CircularProgressIndicator()
-                }
+    PreComposeApp {
+        MaterialTheme {
+            Nav(viewModel = viewModel)
+        }
+    }
+}
 
-                else if (uiState.error != null) {
-                    Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
-                }
-                else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(uiState.elemento) { elemento ->
-                            ElementoItem(elemento)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-@Composable
-fun ElementoItem(elemento: Elemento) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp)) {
-            Text(elemento.nombre, style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(4.dp))
-            Text(elemento.descripcionCorta, style = MaterialTheme.typography.bodySmall)
-        }
-    }
-}
+
+/**
+ * @Composable
+ * fun cargarImagen(url: String) {
+ *     KamelImage(
+ *         resource = asyncPainterResource(url),
+ *         contentDescription = "Imagen",
+ *         modifier = Modifier.fillMaxWidth().padding(8.dp)
+ *     )
+ * }
+ *
+ */
+
+
+
+
