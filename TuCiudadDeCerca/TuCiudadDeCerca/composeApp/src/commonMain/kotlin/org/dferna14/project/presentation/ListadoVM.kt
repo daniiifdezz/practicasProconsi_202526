@@ -9,12 +9,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.dferna14.project.domain.repository.ElementoRepository
 import org.dferna14.project.data.repository.ElementoRepositoryImpl
+import org.dferna14.project.domain.usecase.GetElementosUseCase
 
 /*
 Llama a ElementoRepository para traer los datos (simulados)
  */
-class ElementoVM(
-    private val elementoRepository: ElementoRepository = ElementoRepositoryImpl()
+class ListadoVM(
+    private val getElementosUseCase: GetElementosUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ElementoUI())
     val uiState = _uiState.asStateFlow()
@@ -26,12 +27,14 @@ class ElementoVM(
     fun loadElemento() {
         viewModelScope.launch {
 
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(isLoading = true, error = null) }
 
 
-            val elementos = elementoRepository.getElementos()
-
-            _uiState.update { it.copy(isLoading = false, elemento = elementos) }
+            getElementosUseCase().onSuccess { elementos ->
+                _uiState.update { it.copy(isLoading = false, elemento = elementos) }
+            }.onFailure { error ->
+                _uiState.update { it.copy(isLoading = false, error = error.message) }
+            }
         }
     }
 }

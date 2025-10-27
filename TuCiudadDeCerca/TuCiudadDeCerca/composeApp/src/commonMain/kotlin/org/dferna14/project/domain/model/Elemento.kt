@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Elemento(
 
-    val id: Int,
+    val id: String,
     val nombre: String,
     val descripcionCorta: String,
     val fechaInicio: String?,

@@ -53,7 +53,7 @@ Convertir datos de red a nuestro modelo de dominio de Elemnto
  */
 fun ElementoDTO.toDomain(): Elemento {
     return Elemento(
-        id = this.idFicha,
+        id = this.idFicha.toString(),
         nombre = this.nombre,
         descripcionCorta = this.descripcionCorta,
         fechaInicio = this.fechaInicio,

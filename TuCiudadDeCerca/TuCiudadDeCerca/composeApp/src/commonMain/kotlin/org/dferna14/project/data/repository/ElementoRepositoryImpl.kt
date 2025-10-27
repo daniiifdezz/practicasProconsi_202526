@@ -20,7 +20,7 @@ class ElementoRepositoryImpl(private val httpClient: HttpClient = ktorClient) : 
 
     private val url = "https://tuciudaddecerca-api.proconsi.com/Categoria?idCategoriaPadre=30&idIdioma=0&idProyecto=1"
 
-    override suspend fun getElementos(): List<Elemento> {
+    override suspend fun getElementos(): Result<List<Elemento>> {
         delay(2000)
         return try{
             //aqui esperamos al objeto
@@ -30,11 +30,13 @@ class ElementoRepositoryImpl(private val httpClient: HttpClient = ktorClient) : 
             val dtos = response.fichas
 
             //convertimos la lista de DTO a lista de elementos de nuestro dominio
-            dtos.map {it.toDomain()}
+            val elementos = dtos.map {it.toDomain()}
+
+            Result.success(elementos)
 
         }catch (e: Exception){
             println("Error al obtener los elementos del JSON ${e.message}")
-            emptyList()
+            Result.failure(e)
         }
     }
 

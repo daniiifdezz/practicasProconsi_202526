@@ -4,5 +4,5 @@ import org.dferna14.project.domain.model.Elemento
 
 
 interface ElementoRepository{
-    suspend fun getElementos(): List<Elemento>
+    suspend fun getElementos(): Result<List<Elemento>>
 }
