@@ -32,7 +32,6 @@ data-store = "1.1.7"
 data-store-preferences = "1.1.7"
 
 kamel = "1.0.8"
-precompose = "1.6.2"
 
 [libraries]
 
@@ -80,11 +79,8 @@ data-store-preferences = { module = "androidx.datastore:datastore-preferences", 
 
 
 kamel-image-default = { module = "media.kamel:kamel-image-default", version.ref = "kamel" }
-#kamel-image-compose = { module = "media.kamel:kamel-image-compose", version.ref = "kamel" }
-#kamel-image-resources = { module = "media.kamel:kamel-image-resources", version.ref = "kamel" }
 
 
-precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
 
 
 

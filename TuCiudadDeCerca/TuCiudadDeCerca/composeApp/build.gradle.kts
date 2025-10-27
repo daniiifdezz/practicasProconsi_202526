@@ -62,11 +62,10 @@ kotlin {
             implementation(libs.data.store)
             implementation(libs.data.store.preferences)
 
-            //implementation(libs.kamel.image.default)
-            //implementation(libs.kamel.image.compose)
-            //implementation(libs.kamel.image.resources)
+            implementation(libs.kamel.image.default)
 
-            implementation(libs.precompose)
+
+
 
         }
         commonTest.dependencies {
