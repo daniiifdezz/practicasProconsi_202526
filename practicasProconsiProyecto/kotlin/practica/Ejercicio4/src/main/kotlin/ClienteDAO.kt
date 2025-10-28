@@ -1,3 +1,4 @@
+import util.DniUtils
 import java.sql.Connection
 import java.sql.Date
 import java.sql.Timestamp
@@ -6,6 +7,11 @@ class ClienteDAO(val conexion: Connection){
 
 
     fun crear (cliente: Cliente){
+
+        if (!DniUtils.isValidDni(cliente.dni)) {
+            throw IllegalArgumentException("DNI inválido: ${cliente.dni}")
+        }
+
         val sql = """
             INSERT INTO clientes (dni, nombre, apellidos, tipo_cliente, cuota_maxima, fecha_alta)
             VALUES (?, ?, ?, ?, ?,?)
@@ -13,7 +19,7 @@ class ClienteDAO(val conexion: Connection){
         //trimIndent para no tener espacios innecesarios
 
         conexion.prepareStatement(sql).use { ps ->
-            ps.setString(1, cliente.dni)
+            ps.setString(1, cliente.dni.uppercase())
             ps.setString(2, cliente.nombre)
             ps.setString(3, cliente.apellidos)
             ps.setString(4, cliente.tipo_cliente)
@@ -33,18 +39,28 @@ class ClienteDAO(val conexion: Connection){
     }
 
     fun eliminarCliente (dni: String): Int{
+
+        if (!DniUtils.isValidDni(dni)) {
+            throw IllegalArgumentException("DNI inválido: ${dni}")
+        }
+
         val sql = """DELETE FROM clientes WHERE dni = ?"""
         conexion.prepareStatement(sql).use { ps ->
-            ps.setString(1, dni)
+            ps.setString(1, dni.uppercase())
             return ps.executeUpdate()
         }
     }
 
     fun consultarCliente(dni: String ): Cliente?{
+
+        if (!DniUtils.isValidDni(dni)) {
+            throw IllegalArgumentException("DNI inválido: ${dni}")
+        }
+
         val sql = """SELECT * FROM clientes WHERE dni = ?"""
 
         conexion.prepareStatement(sql).use { ps ->
-            ps.setString(1, dni)
+            ps.setString(1, dni.uppercase())
             val resultSet = ps.executeQuery()
 
 
@@ -72,6 +88,8 @@ class ClienteDAO(val conexion: Connection){
 
     //dni  como parametro podria ser por fecha_alta tambien
     fun listarClientes(orderBy: String = "dni"){
+
+
 
         val sql = """SELECT * FROM clientes ORDER BY $orderBy ASC """
 
@@ -107,14 +125,14 @@ class ClienteDAO(val conexion: Connection){
 
       fun editarCliente(cliente: Cliente){
 
+          if (!DniUtils.isValidDni(cliente.dni)) {
+              throw IllegalArgumentException("DNI inválido: ${cliente.dni}")
+          }
+
           val sql = """UPDATE clientes SET nombre = ?, apellidos = ?, tipo_cliente =?, cuota_maxima = ?, fecha_alta = ? WHERE dni = ? """.trimIndent()
 
           //logica para el tipo de cliente
-          val cuota_final = if (cliente.tipo_cliente == "REGISTRADO"){
-              50.0 //le ponemos esa cantidad como base
-          }else{
-              cliente.cuota_maxima
-          }
+
               conexion.prepareStatement(sql).use { ps ->
                   ps.setString(1, cliente.nombre)
                   ps.setString(2, cliente.apellidos)
@@ -127,7 +145,7 @@ class ClienteDAO(val conexion: Connection){
                   }
 
                   ps.setDate(5, java.sql.Date.valueOf(cliente.fecha_alta))
-                  ps.setString(6, cliente.dni)
+                  ps.setString(6, cliente.dni.uppercase())
 
                   ps.executeUpdate()
 

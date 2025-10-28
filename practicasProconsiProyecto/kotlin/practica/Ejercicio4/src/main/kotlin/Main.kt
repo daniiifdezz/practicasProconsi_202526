@@ -1,3 +1,4 @@
+import util.DniUtils
 import java.sql.DriverManager
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -27,8 +28,7 @@ fun main() {
             val opcion = readln().toIntOrNull()
             when (opcion) {
                 1 -> {
-                    println("DNI: ")
-                    val dni = readln()
+                    val dni = readValidDni()
                     println("Nombre: ")
                     val nombre = readln()
                     println("Apellidos: ")
@@ -55,16 +55,14 @@ fun main() {
                 }
 
                 2 -> {
-                    println("DNI: ")
-                    val dni = readln()
+                    val dni = readValidDni()
                     val cliente = dao.consultarCliente(dni)
 
 
                 }
 
                 3 -> {
-                    println("DNI: ")
-                    val dni = readln()
+                    val dni = readValidDni()
                     val clienteExistente = dao.consultarCliente(dni)
 
                     if (clienteExistente == null) {
@@ -101,7 +99,7 @@ fun main() {
 
                 4 -> {
                     println("Introduce el dni del cliente a borrar: ")
-                    val dni = readln()
+                    val dni = readValidDni()
                     dao.eliminarCliente(dni)
                     println("Cliente eliminado correctamente.")
                 }
@@ -138,4 +136,18 @@ fun main() {
 
     }
 
+}
+
+fun readValidDni(prompt: String = "DNI: "): String {
+    var dni: String
+    do {
+        println(prompt)
+        dni = readln().trim()
+        if (!DniUtils.isValidDni(dni)) {
+            println("DNI inválido. Introduce un DNI/NIE válido.")
+        }
+    } while (!DniUtils.isValidDni(dni))
+
+
+    return dni.uppercase()
 }
