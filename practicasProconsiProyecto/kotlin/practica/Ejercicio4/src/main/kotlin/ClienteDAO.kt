@@ -19,8 +19,8 @@ class ClienteDAO(val conexion: Connection){
             ps.setString(4, cliente.tipo_cliente)
 
             //si el cliente es registrado le metemos la cuota maxima
-            if (cliente.tipo_cliente == "REGISTRADO") {
-                ps.setDouble(5, cliente.cuota_maxima ?: 0.0)
+            if (cliente.cuota_maxima != null) {
+                ps.setDouble(5, cliente.cuota_maxima)
             } else {
                 ps.setNull(5, java.sql.Types.DOUBLE)
             }
@@ -32,30 +32,34 @@ class ClienteDAO(val conexion: Connection){
 
     }
 
-    fun eliminarCliente (dni :String){
+    fun eliminarCliente (dni: String): Int{
         val sql = """DELETE FROM clientes WHERE dni = ?"""
         conexion.prepareStatement(sql).use { ps ->
             ps.setString(1, dni)
-            val filaEliminada =  ps.executeUpdate()
-            println("Has eliminado a: $filaEliminada")
+            return ps.executeUpdate()
         }
     }
 
-    fun consultarCliente(dni: String): Cliente?{
+    fun consultarCliente(dni: String ): Cliente?{
         val sql = """SELECT * FROM clientes WHERE dni = ?"""
 
         conexion.prepareStatement(sql).use { ps ->
             ps.setString(1, dni)
             val resultSet = ps.executeQuery()
+
+
             //puntero que va fila a fila, se mueve a la siguiente fila con .next
             //si hay fila devuelve true si no false
             return if (resultSet.next()) {
+                val cuota = resultSet.getDouble("cuota_maxima")
+                val cuotaOrNull = if (resultSet.wasNull()) null else cuota
                  Cliente(
+                    id = resultSet.getLong("id"),
                     dni = resultSet.getString("dni"),
                     nombre = resultSet.getString("nombre"),
                     apellidos = resultSet.getString("apellidos"),
                     tipo_cliente = resultSet.getString("tipo_cliente"),
-                    cuota_maxima = resultSet.getDouble ("cuota_maxima"),
+                    cuota_maxima = cuotaOrNull,
                     fecha_alta = resultSet.getDate("fecha_alta").toLocalDate()
                 )
             }else{
@@ -75,16 +79,25 @@ class ClienteDAO(val conexion: Connection){
 
             val resultSet = ps.executeQuery()
 
+
+
             while(resultSet.next()){
-                val cliente = Cliente(
-                    resultSet.getString("dni"),
-                    resultSet.getString("nombre"),
-                    resultSet.getString("apellidos"),
-                    resultSet.getString("tipo_cliente"),
-                    resultSet.getDouble("cuota_maxima"),
-                    resultSet.getDate("fecha_alta").toLocalDate()
-                )
-                println(cliente)
+
+                val cuota = resultSet.getDouble("cuota_maxima")
+                val cuotaOrNull = if (resultSet.wasNull()) null else cuota
+
+                val cuotaTexto = cuotaOrNull?.let { ", cuota=${"%.2f".format(it).replace('.', ',')}" } ?: ""
+
+
+                    val id = resultSet.getLong("id")
+                    val dni = resultSet.getString("dni")
+                    val nombre = resultSet.getString("nombre")
+                    val apellidos = resultSet.getString("apellidos")
+                    val tipo = resultSet.getString("tipo_cliente")
+                    val fecha = resultSet.getDate("fecha_alta").toLocalDate()
+
+                    println("id=$id, dni=$dni, nombre=$nombre, apellidos=$apellidos, tipo=$tipo$cuotaTexto, fecha=$fecha")
+
             }
 
         }

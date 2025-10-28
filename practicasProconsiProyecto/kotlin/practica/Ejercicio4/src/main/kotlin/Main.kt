@@ -100,7 +100,7 @@ fun main() {
                 }
 
                 4 -> {
-                    println("DNI: ")
+                    println("Introduce el dni del cliente a borrar: ")
                     val dni = readln()
                     dao.eliminarCliente(dni)
                     println("Cliente eliminado correctamente.")

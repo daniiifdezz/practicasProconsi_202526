@@ -1,6 +1,7 @@
 import java.time.LocalDate
 
 data class Cliente(
+    val id: Long? = null,
     val dni: String,
     val nombre: String,
     val apellidos: String,
