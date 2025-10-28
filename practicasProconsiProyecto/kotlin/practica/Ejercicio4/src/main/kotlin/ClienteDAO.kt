@@ -36,7 +36,7 @@ class ClienteDAO(val conexion: Connection){
         val sql = """DELETE FROM clientes WHERE dni = ?"""
         conexion.prepareStatement(sql).use { ps ->
             ps.setString(1, dni)
-            val filaEliminada = ps.executeUpdate()
+            val filaEliminada =  ps.executeUpdate()
             println("Has eliminado a: $filaEliminada")
         }
     }

@@ -11,23 +11,21 @@
 
 
 fun main() {
-    // Pedir por pantalla los números
-    println("Introduce el primer digito:")
-    val n1 = readln().toDouble()
-    println("Introduce el segundo digito:")
-    val n2 = readln().toDouble()
+        // Pedir por pantalla los números
+        val n1 = nValido("Introduce un número valido.")
+        val n2 = nValido("Introduce un 2º número valido.")
 
-    // Para el redondeo
-    println("Introduce el número de digitos para redondear:")
-    val decimales = readln().toInt()
 
-    // Llamadas a métodos y salida por pantalla
-    println("La suma es: ${sumar(n1, n2, decimales)}")
-    println("La resta es: ${restar(n1, n2, decimales)}")
-    println("La multiplicacion es: ${multiplicar(n1, n2, decimales)}")
-    println("La division es: ${dividir(n1, n2, decimales)}")
-    println("El modulo es: ${modulo(n1, n2, decimales)}")
-    println(comparar(n1, n2))
+        val decimales = nValidoDecimales("Introduce un número valido para redondear.").toInt()
+
+        // Llamadas a métodos y salida por pantalla
+        println("La suma es: ${sumar(n1, n2, decimales)}")
+        println("La resta es: ${restar(n1, n2, decimales)}")
+        println("La multiplicacion es: ${multiplicar(n1, n2, decimales)}")
+        println("La division es: ${dividir(n1, n2, decimales)}")
+        println("El modulo es: ${modulo(n1, n2, decimales)}")
+        println(comparar(n1, n2))
+
 }
 
 
@@ -61,4 +59,49 @@ fun comparar(a: Double, b: Double): String {
         a < b -> "El primer número es menor"
         else -> "El primer número es igual al segundo número"
     }
+}
+
+fun nValido(std: String): Double{
+    var numero: Double?
+    println("Introduce un número válido.")
+
+    do{
+
+        val input = readln()
+        numero = input.toDoubleOrNull()
+
+        when (numero) {
+            is Double -> return numero
+            else -> println("Debe introducir un formato numérico.")
+
+        }
+    }while(true)
+
+
+}
+
+fun nValidoDecimales(std:String): Int{
+
+    var decimales: Int?
+    println("Introduce un número para redondeo válido.")
+
+
+    do{
+        var input = readln()
+
+        decimales = input.toIntOrNull()
+
+        when {
+            decimales !=null && decimales >=0 -> {
+                return decimales
+            }
+            decimales == null -> {
+                println("Introduzca un al menos un número para el redondeo, no puedes meter una cadena vacía.")
+            }
+            else -> println("Debes ingresar un número positivo para el redondeo.")
+
+        }
+
+
+    }while (true)
 }
