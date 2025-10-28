@@ -17,19 +17,13 @@ import java.util.Locale
 
 fun main() {
 
-    println ("Introduzca la primera fecha con el siguiente formato: yyyy/MM/dd")
-
-    val entrada1:String = readLine()!!
-
-    println ("Introduzca la segunda fecha: yyyy/MM/dd")
-
-    val entrada2:String= readLine()!!
-
     val formato = DateTimeFormatter.ofPattern("yyyy/MM/dd")
 
-    try {
-        val fecha1 = LocalDate.parse(entrada1, formato)
-        val fecha2 = LocalDate.parse(entrada2, formato)
+
+    val fecha1 = readFecha("Introduzca la primera fecha con el siguiente formato: yyyy/MM/dd", formato)
+    val fecha2 = readFecha("Introduzca la segunda fecha: yyyy/MM/dd", formato)
+
+
 
         diferenciaFechas(fecha1,fecha2)
 
@@ -38,12 +32,27 @@ fun main() {
         numeroDiasAnio(fecha1,fecha2)
 
         numSemanaAnio(fecha1, fecha2)
-    }catch (e:DateTimeParseException){
-        println("Debes introducir el formato de la fecha correctamente.")
+
+
+
+
+}
+
+
+fun readFecha(prompt: String, formato: DateTimeFormatter): LocalDate {
+    while (true) {
+        println(prompt)
+        val entrada = readLine()
+        if (entrada.isNullOrBlank()) {
+            println("Tienes que ingresas una fecha, intentelo de nuevo.")
+            continue
+        }
+        try {
+            return LocalDate.parse(entrada, formato)
+        } catch (e: DateTimeParseException) {
+            println("Formato incorrecto. Debe ser yyyy/MM/dd, intentelo de nuevo.")
+        }
     }
-
-
-
 }
 
 

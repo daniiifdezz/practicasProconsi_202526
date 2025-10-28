@@ -1,3 +1,5 @@
+import kotlin.system.exitProcess
+
 /**
  * Introducción de 2 cantidades y un tercer dato con el número de decimales en el que realizar el redondeo de las operaciones matemáticas a realizar.
  * Debe calcular:
@@ -62,11 +64,10 @@ fun comparar(a: Double, b: Double): String {
 }
 
 fun nValido(std: String): Double{
-    var numero: Double?
-    println("Introduce un número válido.")
 
-    do{
-
+    while(true){
+        var numero: Double?
+        println (std)
         val input = readln()
         numero = input.toDoubleOrNull()
 
@@ -75,18 +76,19 @@ fun nValido(std: String): Double{
             else -> println("Debe introducir un formato numérico.")
 
         }
-    }while(true)
+    }
 
 
 }
 
 fun nValidoDecimales(std:String): Int{
 
-    var decimales: Int?
-    println("Introduce un número para redondeo válido.")
 
 
-    do{
+    while (true){
+
+        var decimales: Int?
+        println (std)
         var input = readln()
 
         decimales = input.toIntOrNull()
@@ -103,5 +105,5 @@ fun nValidoDecimales(std:String): Int{
         }
 
 
-    }while (true)
+    }
 }
