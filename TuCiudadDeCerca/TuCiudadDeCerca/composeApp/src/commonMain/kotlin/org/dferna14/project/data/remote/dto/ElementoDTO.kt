@@ -48,27 +48,6 @@ data class ElementoDTO(
 
 )
 
-/*
-Convertir datos de red a nuestro modelo de dominio de Elemnto
- */
-fun ElementoDTO.toDomain(): Elemento {
-    return Elemento(
-        id = this.idFicha.toString(),
-        nombre = this.nombre,
-        descripcionCorta = this.descripcionCorta,
-        fechaInicio = this.fechaInicio,
-        fechaFin = this.fechaFin,
-        horaInicio = this.horaInicio,
-        horaFin = this.horaFin,
-        latitud = this.latitud,
-        longitud = this.longitud,
-        urlImagen = this.urlImagen,
-        distanciaUsuarioMetros = this.distanciaUsuarioMetros,
-        tipoFicha = this.tipoFicha,
-        orden = this.orden
-    )
-}
-
 
 /*
 Clase envoltorio que representa la estructura completa del JSON

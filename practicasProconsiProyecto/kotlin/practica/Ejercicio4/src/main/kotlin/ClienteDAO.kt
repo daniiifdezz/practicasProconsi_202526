@@ -12,11 +12,27 @@ class ClienteDAO(val conexion: Connection){
             throw IllegalArgumentException("DNI inválido: ${cliente.dni}")
         }
 
+        val checkSql = "SELECT COUNT(*) FROM clientes WHERE dni = ?"
+        conexion.prepareStatement(checkSql).use { ps ->
+            ps.setString(1, cliente.dni.uppercase())
+            val rs = ps.executeQuery()
+            if (rs.next() && rs.getInt(1) > 0) {
+                println("El DNI ${cliente.dni} ya está en la base de datos. No se puede añadir el cliente.")
+                return
+            }
+        }
+
         val sql = """
             INSERT INTO clientes (dni, nombre, apellidos, tipo_cliente, cuota_maxima, fecha_alta)
             VALUES (?, ?, ?, ?, ?,?)
         """.trimIndent()
         //trimIndent para no tener espacios innecesarios
+
+        if(cliente.dni.isEmpty()){
+            throw IllegalArgumentException("El DNI no puede estar vacío.")
+        }
+
+
 
         conexion.prepareStatement(sql).use { ps ->
             ps.setString(1, cliente.dni.uppercase())

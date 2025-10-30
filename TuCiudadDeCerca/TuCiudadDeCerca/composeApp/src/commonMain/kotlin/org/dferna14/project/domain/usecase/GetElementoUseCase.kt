@@ -10,4 +10,6 @@ class GetElementosUseCase(
     suspend operator fun invoke(): Result<List<Elemento>> {
         return repository.getElementos()
     }
+
+
 }

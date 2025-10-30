@@ -20,7 +20,7 @@ fun main() {
             4. Eliminar cliente
             5. Listar clientes
             6. Salir 
-       
+      
             
             Elige una opción:
             """.trimIndent()
