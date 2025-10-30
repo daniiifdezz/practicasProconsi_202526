@@ -21,12 +21,9 @@ o	Las coordenadas de su centro.
 
 fun main() {
 
-    println("Introduce el número de circulos que desea generar: ")
-    val circulos:Int = readln().toInt()
-    println("Introduce el número de triangulos que desea generar: ")
-    val triangulos: Int = readln().toInt()
-    println("Introduce el número de cuadrados que desea generar: ")
-    val cuadrados:Int = readln().toInt()
+    val circulos = leerEntero("Introduce el número de círculos que desea generar: ")
+    val triangulos = leerEntero("Introduce el número de triángulos que desea generar: ")
+    val cuadrados = leerEntero("Introduce el número de cuadrados que desea generar: ")
 
     val formas = generarFormas(circulos, triangulos, cuadrados)
 
@@ -35,6 +32,19 @@ fun main() {
 
 
 }
+
+fun leerEntero(mensaje: String): Int {
+    while (true) {
+        try {
+            println(mensaje)
+            val entrada = readln().toInt()
+            return entrada
+        } catch (e: NumberFormatException) {
+            println("Error: Debes introducir un número válido.")
+        }
+    }
+}
+
 
 
 
