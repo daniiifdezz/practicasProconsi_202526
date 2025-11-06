@@ -18,5 +18,8 @@ data class Elemento(
     val distanciaUsuarioMetros: Double?,
     val tipoFicha: String?,
     val orden: Int,
-    val imageUrl: String? = null
+    val imageUrl: String? = null,
+    val descripcionLarga: String? = null,
+    val galeriaImagenes: List<String>? = emptyList(),
+
 )

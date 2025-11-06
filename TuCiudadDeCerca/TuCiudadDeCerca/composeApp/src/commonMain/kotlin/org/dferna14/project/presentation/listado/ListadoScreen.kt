@@ -61,8 +61,13 @@ fun ListadoScreen(
                 ) {
                     items(uiState.elemento) { elemento ->
                         ElementoItem(
+
+
                             elemento = elemento,
-                            onClick = { onElementoClick(elemento.id) }
+
+                            onClick = {
+                                println("Clic en ListadoScreen. ID: ${elemento.id}")
+                                onElementoClick(elemento.id) }
                         )
                     }
                 }
@@ -83,7 +88,7 @@ fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
         modifier = Modifier.fillMaxWidth(),
     ) {
         if (elemento.urlImagen != null) {
-            KamelImage(
+                KamelImage(
                 resource = asyncPainterResource(data = elemento.urlImagen),
                 contentDescription = "Imagen de ${elemento.nombre}",
                 modifier = Modifier

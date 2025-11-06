@@ -25,21 +25,19 @@ fun ElementoDTO.toDomain(): Elemento {
         distanciaUsuarioMetros = this.distanciaUsuarioMetros,
         tipoFicha = this.tipoFicha,
         orden = this.orden,
-        //galeriaImagenes = emptyList()
+        galeriaImagenes = emptyList()
     )
 }
 
 fun ElementoDetalleDTO.toDomain(): Elemento {
-    // Primero, necesitamos actualizar el modelo de dominio para que acepte la nueva información.
-    // Ve a 'domain/model/Elemento.kt' y añade 'descripcionLarga' y 'galeriaImagenes'.
 
     return Elemento(
         id = this.idFicha.toString(),
         nombre = this.nombre,
-        descripcionCorta = this.descripcion, // Usamos la descripción larga como corta por ahora
-        descripcionLarga = this.descripcion, // Nuevo campo
+        descripcionCorta = this.descripcion,
+        descripcionLarga = this.descripcion,
         urlImagen = this.urlImagen,
-        galeriaImagenes = this.media?.images ?: emptyList(), // Nuevo campo
+        galeriaImagenes = this.media?.images ?: emptyList(),
         latitud = this.latitud,
         longitud = this.longitud,
         fechaInicio = null,

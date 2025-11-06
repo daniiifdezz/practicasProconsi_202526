@@ -18,7 +18,8 @@ class ApiService(private val httpClient: HttpClient) {
     }
 
     suspend fun getElementosDetalleDto(id: String): ElementoDetalleDTO {
-        val url = "$baseUrl/Ficha?idFicha=126&TipoFicha=F&idIdioma=0&idProyecto=1"
+        val url = "$baseUrl/Ficha?idFicha=$id&TipoFicha=F&idIdioma=0&idProyecto=1"
+        println("URL final de la API: $url")
         return httpClient.get(url).body()
     }
 

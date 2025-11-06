@@ -11,14 +11,14 @@ import org.dferna14.project.domain.repository.ElementoRepository
 import org.dferna14.project.data.repository.ElementoRepositoryImpl
 import org.dferna14.project.domain.usecase.GetElementosUseCase
 
-/*
-Llama a ElementoRepository para traer los datos (simulados)
- */
+
+//clicl img de ui -> navegador -> detalleScreen(id) -> detalleVM -> useCase -> repo
 class ListadoVM(
     private val getElementosUseCase: GetElementosUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ElementoUI())
     val uiState = _uiState.asStateFlow()
+
 
     init {
         loadElemento()

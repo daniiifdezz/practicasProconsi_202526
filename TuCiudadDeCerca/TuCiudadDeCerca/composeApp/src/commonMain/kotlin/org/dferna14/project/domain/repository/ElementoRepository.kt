@@ -6,5 +6,5 @@ import tuciudaddecerca.composeapp.generated.resources.Res
 
 interface ElementoRepository{
     suspend fun getElementos(): Result<List<Elemento>>
-    suspend fun getDetalleElementos(id:String): Result<Elemento>
+    suspend fun getDetalleElemento(id:String): Result<Elemento>
 }

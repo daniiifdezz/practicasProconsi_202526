@@ -11,7 +11,8 @@ import org.dferna14.project.data.remote.dto.ApiResult
 import org.dferna14.project.data.remote.dto.ElementoDTO
 import org.dferna14.project.data.remote.dto.ElementoDetalleDTO
 import org.dferna14.project.data.remote.ktorClient
-import org.dferna14.project.data.remote.dto.toDomain
+import org.dferna14.project.data.remote.dto.MediaDTO
+import org.dferna14.project.data.mapper.toDomain
 
 
 /*
@@ -41,22 +42,23 @@ class ElementoRepositoryImpl(private val apiService: ApiService) : ElementoRepos
         }
     }
 
+
+
     override suspend fun getDetalleElemento(id:String): Result<Elemento> {
         delay(2000)
         return try {
+            println("Repositorio llama a ApiService con ID: $id")
             val detalleDto = apiService.getElementosDetalleDto(id)
 
-            // 2. Mapea el DTO de detalle a tu modelo de dominio 'Elemento'
-            //    (Necesitarás crear esta función de mapeo si aún no la tienes)
-            val elementoDetalle = ElementoDetalleDTO.toDomain()
 
-            // 3. Envuelve el resultado exitoso en Result.success
+            val elementoDetalle = detalleDto.toDomain()
+
             Result.success(elementoDetalle)
 
         } catch (e: Exception) {
-            // 4. Si algo falla (red, parseo, etc.), captura la excepción
             println("Error al obtener el detalle del elemento con id $id: ${e.message}")
             Result.failure(e)
         }
 
     }
+}
