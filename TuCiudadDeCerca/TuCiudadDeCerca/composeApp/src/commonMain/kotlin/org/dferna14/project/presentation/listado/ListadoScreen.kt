@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,12 +40,22 @@ import org.dferna14.project.presentation.ListadoVM
 @Composable
 fun ListadoScreen(
     viewModel: ListadoVM,
-    onElementoClick: (String) -> Unit
+    onElementoClick: (String) -> Unit,
+    onVerFavoritosClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Puntos de Interés") }) }
+        topBar = {
+            TopAppBar(
+                title = { Text("Puntos de interés ciudad de León") },
+                actions = {
+                    Button(onClick = onVerFavoritosClick) {
+                        Text("Favoritos")
+                    }
+                }
+            )
+        }
     ) { paddingValues ->
         Box(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
@@ -67,7 +79,8 @@ fun ListadoScreen(
 
                             onClick = {
                                 println("Clic en ListadoScreen. ID: ${elemento.id}")
-                                onElementoClick(elemento.id) }
+                                onElementoClick(elemento.id)
+                            }
                         )
                     }
                 }
@@ -88,7 +101,7 @@ fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
         modifier = Modifier.fillMaxWidth(),
     ) {
         if (elemento.urlImagen != null) {
-                KamelImage(
+            KamelImage(
                 resource = asyncPainterResource(data = elemento.urlImagen),
                 contentDescription = "Imagen de ${elemento.nombre}",
                 modifier = Modifier
@@ -100,9 +113,25 @@ fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
         }
 
         Column(Modifier.padding(16.dp)) {
-            Text(elemento.nombre, style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(4.dp))
-            Text(elemento.descripcionCorta, style = MaterialTheme.typography.bodySmall)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                // Título del elemento
+                Text(
+                    text = elemento.nombre,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.weight(1f)
+                )
+
+                if (elemento.esFavorito) {
+                    Text(
+                        text = "(Favorito)",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+            Spacer (Modifier.height(4.dp))
+
+            Text(text = elemento.descripcionCorta, style = MaterialTheme.typography.bodySmall)
         }
     }
 }

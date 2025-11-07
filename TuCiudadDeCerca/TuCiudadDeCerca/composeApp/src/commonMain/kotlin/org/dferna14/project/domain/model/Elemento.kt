@@ -21,5 +21,6 @@ data class Elemento(
     val imageUrl: String? = null,
     val descripcionLarga: String? = null,
     val galeriaImagenes: List<String>? = emptyList(),
+    val esFavorito:Boolean = false,
 
 )

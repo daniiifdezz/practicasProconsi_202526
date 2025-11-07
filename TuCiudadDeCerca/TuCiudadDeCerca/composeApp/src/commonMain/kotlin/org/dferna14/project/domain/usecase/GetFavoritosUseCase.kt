@@ -1,16 +1,13 @@
 package org.dferna14.project.domain.usecase
 
+import kotlinx.coroutines.flow.Flow
 import org.dferna14.project.domain.model.Elemento
 import org.dferna14.project.domain.repository.ElementoRepository
 
-class GestionarFavoritoUseCase(
+class GetFavoritosUseCase(
     private val repository: ElementoRepository
 ) {
-    suspend fun addFavorito(id: String)  {
-         repository.addFavorito(id)
-    }
-
-    suspend fun removeFavorito(id: String) {
-         repository.removeFavorito(id)
+    suspend operator fun invoke(): Flow<List<Elemento>> {
+        return repository.getFavoritos()
     }
 }

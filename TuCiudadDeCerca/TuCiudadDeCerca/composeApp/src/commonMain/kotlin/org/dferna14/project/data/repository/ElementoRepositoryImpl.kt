@@ -6,6 +6,8 @@ import org.dferna14.project.domain.repository.ElementoRepository
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.dferna14.project.data.remote.ApiService
 import org.dferna14.project.data.remote.dto.ApiResult
 import org.dferna14.project.data.remote.dto.ElementoDTO
@@ -21,6 +23,8 @@ El VM recibe la llista y actualiza su uiState
  */
 class ElementoRepositoryImpl(private val apiService: ApiService) : ElementoRepository {
 
+    //simulacion bbdd, para futura implementacion.
+    private val favoritosIds = MutableStateFlow<Set<String>>(emptySet())
 
     override suspend fun getElementos(): Result<List<Elemento>> {
         delay(2000)
@@ -45,7 +49,6 @@ class ElementoRepositoryImpl(private val apiService: ApiService) : ElementoRepos
 
 
     override suspend fun getDetalleElemento(id:String): Result<Elemento> {
-        delay(2000)
         return try {
             println("Repositorio llama a ApiService con ID: $id")
             val detalleDto = apiService.getElementosDetalleDto(id)
@@ -61,4 +64,24 @@ class ElementoRepositoryImpl(private val apiService: ApiService) : ElementoRepos
         }
 
     }
+
+
+    //futura implementacion BBDD
+    override suspend fun addFavorito(id: String) {
+        favoritosIds.value = favoritosIds.value + id
+        println("Repositorio: Añadiendo favorito con ID $id a la base de datos.")
+    }
+
+    override suspend fun removeFavorito(id: String) {
+        favoritosIds.value = favoritosIds.value - id
+
+        println("Repositorio: Quitando favorito con ID $id de la base de datos.")
+    }
+
+    override suspend fun getFavoritos(): Flow<List<Elemento>>{
+        //no devuelve nada es vacio
+        return MutableStateFlow(emptyList())
+    }
+
+
 }

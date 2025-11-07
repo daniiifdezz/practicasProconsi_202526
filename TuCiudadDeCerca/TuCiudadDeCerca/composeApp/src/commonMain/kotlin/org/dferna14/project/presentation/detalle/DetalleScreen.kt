@@ -27,6 +27,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
+import androidx.compose.foundation.layout.Row
+
 
 
 @Composable
@@ -57,6 +59,17 @@ fun DetalleScreen(
                         modifier = Modifier.padding(16.dp)
                     )
 
+                    Button(
+                        onClick = {
+                            println("Botón presionado")
+                        },
+                        modifier = Modifier.padding(horizontal = 16.dp)
+
+                    ){
+
+                        Text(if (state.elemento.esFavorito) "Quitar de favoritos" else "Agregar a favoritos")
+                    }
+
                     Text(
                         text = "Galería",
                         style = MaterialTheme.typography.titleLarge,
@@ -64,7 +77,6 @@ fun DetalleScreen(
                     )
                     LazyRow(
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                        // Espacio de 8dp entre cada foto.
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(state.elemento.galeriaImagenes ?: emptyList()) { imageUrl ->

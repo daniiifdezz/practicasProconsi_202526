@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.dferna14.project.domain.model.Elemento
+import org.dferna14.project.domain.usecase.GestionarFavoritoUseCase
 import org.dferna14.project.domain.usecase.GetElementoDetalleUseCase
 
 sealed interface DetalleUiState {
@@ -17,7 +18,8 @@ sealed interface DetalleUiState {
 
 class DetalleVM(
     private val elementoId: String,
-    private val getElementoDetalleUseCase: GetElementoDetalleUseCase
+    private val getElementoDetalleUseCase: GetElementoDetalleUseCase,
+    private val gestionarFavoritoUseCase: GestionarFavoritoUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<DetalleUiState>(DetalleUiState.Loading)
@@ -27,11 +29,30 @@ class DetalleVM(
         cargarDetalleElemento()
     }
 
+    fun onFavoritoClicked() {
+        viewModelScope.launch {
+            val estadoActual = _uiState.value
+            if (estadoActual is DetalleUiState.Success) {
+                val elementoActual = estadoActual.elemento
+                if (elementoActual.esFavorito) {
+                    gestionarFavoritoUseCase.removeFavorito(elementoActual.id)
+                } else {
+                    gestionarFavoritoUseCase.addFavorito(elementoActual.id)
+                }
+
+
+                _uiState.update {
+                    (it as DetalleUiState.Success).copy(
+                        elemento = elementoActual.copy(esFavorito = !elementoActual.esFavorito)
+                    )
+                }
+            }
+        }
+    }
     private fun cargarDetalleElemento() {
         _uiState.update { DetalleUiState.Loading }
 
         viewModelScope.launch {
-            println("DetalleVM va a llamar al UseCase con ID: $elementoId")
             getElementoDetalleUseCase(id = elementoId)
                 .onSuccess { elementoDetalle ->
                     _uiState.update { DetalleUiState.Success(elementoDetalle) }
