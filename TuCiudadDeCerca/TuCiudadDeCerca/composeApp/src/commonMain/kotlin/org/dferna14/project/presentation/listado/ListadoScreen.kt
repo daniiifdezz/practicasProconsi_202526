@@ -90,10 +90,7 @@ fun ListadoScreen(
 }
 
 
-/**
- * Este Composable representa un único ítem de la lista.
- * Ahora es clicable.
- */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
@@ -114,7 +111,6 @@ fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
 
         Column(Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                // Título del elemento
                 Text(
                     text = elemento.nombre,
                     style = MaterialTheme.typography.titleMedium,
