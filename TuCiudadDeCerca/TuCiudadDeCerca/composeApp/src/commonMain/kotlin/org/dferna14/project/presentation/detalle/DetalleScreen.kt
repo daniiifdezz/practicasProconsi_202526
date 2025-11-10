@@ -1,6 +1,7 @@
 package org.dferna14.project.presentation.detalle
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -28,9 +29,14 @@ import androidx.compose.ui.unit.dp
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetalleScreen(
     viewModel: DetalleVM,
@@ -38,41 +44,58 @@ fun DetalleScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+
+                    Text("Detalle del Elemento")
+                },
+                actions = {
+                    Button(
+                        onClick = onVolverAtras,
+                        modifier = Modifier.padding(end = 12.dp)
+                    ) {
+                        Text("Volver")
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
         when (val state = uiState) {
             is DetalleUiState.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.padding(top = 64.dp))
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
             is DetalleUiState.Success -> {
-
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
+                        .padding(paddingValues)
                         .verticalScroll(rememberScrollState())
                 ) {
+
                     Text(
                         text = state.elemento.nombre,
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
                         modifier = Modifier.padding(16.dp)
                     )
 
                     Button(
-                        onClick = {
-                            viewModel.onFavoritoClicked()
-                            println("Botón presionado")
-                        },
-                        modifier = Modifier.padding(horizontal = 16.dp)
-
-                    ){
-
+                        onClick = { viewModel.onFavoritoClicked() },
+                        modifier = Modifier.align(Alignment.Start)
+                    ) {
                         Text(if (state.elemento.esFavorito) "Quitar de favoritos" else "Agregar a favoritos")
                     }
 
+                    Spacer(modifier = Modifier.height(20.dp))
+
                     Text(
-                        text = "Galería",
+                        text = "Galería de imágenes",
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
@@ -95,7 +118,8 @@ fun DetalleScreen(
                     Text(
                         text = "Descripción",
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                        textDecoration = TextDecoration.Underline
                     )
                     Text(
                         text = state.elemento.descripcionLarga ?: "No disponible",
@@ -103,25 +127,18 @@ fun DetalleScreen(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
 
-
-                    Spacer(Modifier.weight(1f))
-                    Button(
-                        onClick = onVolverAtras,
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text("Volver a la lista")
-                    }
                 }
-
-
-
             }
             is DetalleUiState.Error -> {
-                Text(
-                    text = "Error: ${state.message}",
-                    color = Color.Red,
-                    modifier = Modifier.padding(top = 64.dp)
-                )
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Error: ${state.message}",
+                        color = Color.Red
+                    )
+                }
             }
         }
     }

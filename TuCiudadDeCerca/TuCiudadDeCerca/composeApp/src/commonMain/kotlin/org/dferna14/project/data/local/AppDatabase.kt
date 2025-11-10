@@ -12,5 +12,7 @@ import androidx.room.RoomDatabase
 
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun favoritoDao(): FavoritoDAO
+    abstract fun favoritoDAO(): FavoritoDAO
 }
+
+

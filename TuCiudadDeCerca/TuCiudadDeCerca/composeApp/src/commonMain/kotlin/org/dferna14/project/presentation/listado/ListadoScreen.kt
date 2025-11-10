@@ -11,8 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,13 +28,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.semantics.error
 import androidx.compose.ui.unit.dp
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
-
 import org.dferna14.project.domain.model.Elemento
 import org.dferna14.project.presentation.ListadoVM
+import androidx.compose.ui.text.font.FontWeight
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,12 +48,15 @@ fun ListadoScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Puntos de interés ciudad de León") },
+                title = { Text("Puntos de interés ciudad de León",
+                        fontWeight = FontWeight.SemiBold)},
                 actions = {
-                    Button(onClick = onVerFavoritosClick) {
+                    Button(onClick = onVerFavoritosClick, modifier = Modifier.padding(end = 16.dp) ) {
                         Text("Favoritos")
                     }
                 }
+
+
             )
         }
     ) { paddingValues ->
@@ -66,17 +69,16 @@ fun ListadoScreen(
             } else if (uiState.error != null) {
                 Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
             } else {
-                LazyColumn(
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 300.dp),
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(uiState.elemento) { elemento ->
                         ElementoItem(
-
-
                             elemento = elemento,
-
                             onClick = {
                                 onElementoClick(elemento.id)
                             }
@@ -94,14 +96,14 @@ fun ListadoScreen(
 @Composable
 fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        //modifier = Modifier.fillMaxWidth(),
     ) {
         if (elemento.urlImagen != null) {
             KamelImage(
                 resource = asyncPainterResource(data = elemento.urlImagen),
                 contentDescription = "Imagen de ${elemento.nombre}",
                 modifier = Modifier
-                    .fillMaxWidth()
+                    //.fillMaxWidth()
                     .height(180.dp)
                     .clickable(onClick = onClick),
                 contentScale = ContentScale.Crop

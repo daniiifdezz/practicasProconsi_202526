@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import org.dferna14.project.data.local.database
 import org.dferna14.project.data.remote.ApiService
 import org.dferna14.project.data.remote.ktorClient
 import org.dferna14.project.data.repository.ElementoRepositoryImpl
@@ -43,11 +44,16 @@ sealed class Pantalla {
 fun App() {
     MaterialTheme {
 
-        val elementoRepository = remember { ElementoRepositoryImpl(ApiService(ktorClient)) }
+        val elementoRepository = remember {
+            val favoritoDAO = database.favoritoDAO()
+            ElementoRepositoryImpl(ApiService(ktorClient), favoritoDAO)
+        }
+
         val getElementosUseCase = remember { GetElementosUseCase(elementoRepository) }
         val getElementoDetalleUseCase = remember { GetElementoDetalleUseCase(elementoRepository) }
         val gestionarFavoritoUseCase = remember { GestionarFavoritoUseCase(elementoRepository) }
         val getFavoritosUseCase = remember { GetFavoritosUseCase(elementoRepository) }
+
 
         var pantallaActual: Pantalla by remember { mutableStateOf(Pantalla.Listado) }
 

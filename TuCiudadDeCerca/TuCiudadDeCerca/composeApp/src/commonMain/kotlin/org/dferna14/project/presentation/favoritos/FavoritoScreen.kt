@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,7 +39,17 @@ fun FavoritosScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Mis Favoritos") })
+            TopAppBar(
+                title = { Text("Mis Favoritos") },
+                actions = {
+                    Button(
+                        onClick = onVolverAtras,
+                        modifier = Modifier.padding(end = 12.dp)
+                    ) {
+                        Text("Volver atrás")
+                    }
+                }
+            )
         }
     ) { paddingValues ->
 
@@ -57,10 +70,12 @@ fun FavoritosScreen(
                     Text("No has añadido ningún favorito.")
                 }
             } else {
-                LazyColumn(
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 300.dp),
                     modifier = Modifier.weight(1f).fillMaxWidth(),
                     contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(uiState.favoritos) { elemento ->
                         ElementoItem(
@@ -71,12 +86,6 @@ fun FavoritosScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-
-            Button(onClick = onVolverAtras) {
-                Text("Volver atrás")
-            }
         }
     }
 
