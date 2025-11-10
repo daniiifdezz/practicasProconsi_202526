@@ -6,8 +6,14 @@ import org.dferna14.project.domain.repository.ElementoRepository
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import org.dferna14.project.data.remote.ApiService
 import org.dferna14.project.data.remote.dto.ApiResult
 import org.dferna14.project.data.remote.dto.ElementoDTO
@@ -47,10 +53,8 @@ class ElementoRepositoryImpl(private val apiService: ApiService) : ElementoRepos
     }
 
 
-
-    override suspend fun getDetalleElemento(id:String): Result<Elemento> {
+    override suspend fun getDetalleElemento(id: String): Result<Elemento> {
         return try {
-            println("Repositorio llama a ApiService con ID: $id")
             val detalleDto = apiService.getElementosDetalleDto(id)
 
 
@@ -59,7 +63,6 @@ class ElementoRepositoryImpl(private val apiService: ApiService) : ElementoRepos
             Result.success(elementoDetalle)
 
         } catch (e: Exception) {
-            println("Error al obtener el detalle del elemento con id $id: ${e.message}")
             Result.failure(e)
         }
 
@@ -69,19 +72,34 @@ class ElementoRepositoryImpl(private val apiService: ApiService) : ElementoRepos
     //futura implementacion BBDD
     override suspend fun addFavorito(id: String) {
         favoritosIds.value = favoritosIds.value + id
-        println("Repositorio: Añadiendo favorito con ID $id a la base de datos.")
     }
 
     override suspend fun removeFavorito(id: String) {
         favoritosIds.value = favoritosIds.value - id
 
-        println("Repositorio: Quitando favorito con ID $id de la base de datos.")
     }
 
-    override suspend fun getFavoritos(): Flow<List<Elemento>>{
-        //no devuelve nada es vacio
-        return MutableStateFlow(emptyList())
+    override fun getFavoritos(): Flow<List<Elemento>> {
+        return favoritosIds.flatMapLatest { setDeIds ->
+            flow {
+                if (setDeIds.isEmpty()) {
+                    emit(emptyList())
+                } else {
+                    coroutineScope {
+                        val listaDeFavoritos = setDeIds.map { id ->
+                            async { getDetalleElemento(id) }
+                        }.awaitAll()
+
+                        val favoritosExitosos = listaDeFavoritos.mapNotNull { it.getOrNull() }
+
+                        emit(favoritosExitosos)
+                    }
+                }
+            }
+        }
     }
-
-
 }
+
+
+
+

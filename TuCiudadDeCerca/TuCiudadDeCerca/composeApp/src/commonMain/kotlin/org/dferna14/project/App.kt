@@ -26,6 +26,8 @@ import org.dferna14.project.domain.usecase.GetFavoritosUseCase
 import org.dferna14.project.presentation.ListadoVM
 import org.dferna14.project.presentation.detalle.DetalleScreen
 import org.dferna14.project.presentation.detalle.DetalleVM
+import org.dferna14.project.presentation.favoritos.FavoritosScreen
+import org.dferna14.project.presentation.favoritos.FavoritosVM
 import org.dferna14.project.presentation.listado.ListadoScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -70,7 +72,8 @@ fun App() {
                     DetalleVM(
                         elementoId = pantalla.id,
                         getElementoDetalleUseCase = getElementoDetalleUseCase,
-                        gestionarFavoritoUseCase = gestionarFavoritoUseCase
+                        gestionarFavoritoUseCase = gestionarFavoritoUseCase,
+                        getFavoritosUseCase = getFavoritosUseCase
                     )
                 }
                 DetalleScreen(
@@ -81,15 +84,17 @@ fun App() {
                 )
             }
             is Pantalla.Favoritos ->{
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Button(onClick = { pantallaActual = Pantalla.Listado }) {
-                        Text("Volver")
+                val favoritosVM = remember { FavoritosVM(getFavoritosUseCase) }
+
+                FavoritosScreen(
+                    viewModel = favoritosVM,
+                    onVolverAtras = {
+                        pantallaActual = Pantalla.Listado
+                    },
+                    onElementoClick = { elementoId ->
+                        pantallaActual = Pantalla.Detalle(elementoId)
                     }
-                }
+                )
             }
         }
     }

@@ -61,6 +61,7 @@ fun DetalleScreen(
 
                     Button(
                         onClick = {
+                            viewModel.onFavoritoClicked()
                             println("Botón presionado")
                         },
                         modifier = Modifier.padding(horizontal = 16.dp)
@@ -101,16 +102,19 @@ fun DetalleScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
+
+
+                    Spacer(Modifier.weight(1f))
+                    Button(
+                        onClick = onVolverAtras,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text("Volver a la lista")
+                    }
                 }
 
 
-                Spacer(Modifier.weight(1f))
-                Button(
-                    onClick = onVolverAtras,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text("Volver a la lista")
-                }
+
             }
             is DetalleUiState.Error -> {
                 Text(

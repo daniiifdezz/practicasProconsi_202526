@@ -13,6 +13,6 @@ interface ElementoRepository{
 
     suspend fun removeFavorito(id: String)
 
-    suspend fun getFavoritos(): Flow<List<Elemento>>
+     fun getFavoritos(): Flow<List<Elemento>>
 
 }

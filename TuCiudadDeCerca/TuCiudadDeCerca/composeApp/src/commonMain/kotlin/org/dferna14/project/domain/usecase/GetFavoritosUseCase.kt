@@ -7,7 +7,7 @@ import org.dferna14.project.domain.repository.ElementoRepository
 class GetFavoritosUseCase(
     private val repository: ElementoRepository
 ) {
-    suspend operator fun invoke(): Flow<List<Elemento>> {
+    operator fun invoke(): Flow<List<Elemento>> {
         return repository.getFavoritos()
     }
 }

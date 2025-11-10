@@ -1,64 +1,53 @@
 package org.dferna14.project.presentation
 
-import androidx.compose.animation.core.copy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import org.dferna14.project.domain.repository.ElementoRepository
-import org.dferna14.project.data.repository.ElementoRepositoryImpl
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import org.dferna14.project.domain.usecase.GetElementosUseCase
 import org.dferna14.project.domain.usecase.GetFavoritosUseCase
 
 
-//clicl img de ui -> navegador -> detalleScreen(id) -> detalleVM -> useCase -> repo
 class ListadoVM(
-
     private val getElementosUseCase: GetElementosUseCase,
     private val getFavoritosUseCase: GetFavoritosUseCase
-
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(ElementoUI())
-    val uiState = _uiState.asStateFlow()
+
+    //obtenemos favoritos del useCase
+    private val favoritosFlow = getFavoritosUseCase()
+
+    val uiState: StateFlow<ElementoUI> = favoritosFlow.flatMapLatest { listaFavoritos ->
 
 
-    init {
-        loadElemento()
-    }
+        flow {
 
-    fun loadElemento() {
-        viewModelScope.launch {
+            //obtenemos datos
+            val resultadoApi = getElementosUseCase()
 
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            resultadoApi.fold(
+                onSuccess = { elementosDeApi ->
 
-            val elementosResult = getElementosUseCase()
-            val favoritosFlow = getFavoritosUseCase()
-
-            elementosResult.onSuccess { elementosFromApi ->
-
-                //escuchamos los dos flujos y se cambian los datos tras actualizaciones
-                combine(favoritosFlow) { favoritos ->
-
-                    //ids marcados
-                    val favoritosIdSet = favoritos.first().map { it.id }.toSet()
-
-
-                    val elementosCombinados = elementosFromApi.map { elementoApi ->
+                    val favoritosIdSet = listaFavoritos.map { it.id }.toSet()
+                    val elementosCombinados = elementosDeApi.map { elementoApi ->
                         elementoApi.copy(esFavorito = elementoApi.id in favoritosIdSet)
                     }
-                    elementosCombinados
-                }.collect { elementosFinales ->
-                    _uiState.update {
-                        it.copy(isLoading = false, elemento = elementosFinales)
-                    }
-                }
-            }.onFailure { error ->
-                _uiState.update { it.copy(isLoading = false, error = error.message) }
-            }
-        }
-    }
-}
+                    val numMarcadosComoFavoritos = elementosCombinados.count { it.esFavorito }
 
+                    emit(ElementoUI(isLoading = false, elemento = elementosCombinados))
+                },
+                onFailure = { error ->
+                    emit(ElementoUI(isLoading = false, error = error.message))
+                }
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = ElementoUI(isLoading = true)
+    )
+}

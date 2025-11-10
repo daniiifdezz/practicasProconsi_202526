@@ -78,7 +78,6 @@ fun ListadoScreen(
                             elemento = elemento,
 
                             onClick = {
-                                println("Clic en ListadoScreen. ID: ${elemento.id}")
                                 onElementoClick(elemento.id)
                             }
                         )

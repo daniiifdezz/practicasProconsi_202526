@@ -9,6 +9,6 @@ Representamos lo que la pantalla puede necesitar.
 
 data class ElementoUI(
     val elemento: List<Elemento> = emptyList(),
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val error: String? = null
 )
