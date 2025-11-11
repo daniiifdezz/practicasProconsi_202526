@@ -29,11 +29,20 @@ import androidx.compose.ui.unit.dp
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import org.jetbrains.compose.resources.painterResource
+import tuciudaddecerca.composeapp.generated.resources.Res
+import tuciudaddecerca.composeapp.generated.resources.addFav
+import tuciudaddecerca.composeapp.generated.resources.addFavClickado
+import tuciudaddecerca.composeapp.generated.resources.corazon_icon
+import tuciudaddecerca.composeapp.generated.resources.menu_icon
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,11 +61,16 @@ fun DetalleScreen(
                     Text("Detalle del Elemento")
                 },
                 actions = {
-                    Button(
+
+                    IconButton(
                         onClick = onVolverAtras,
-                        modifier = Modifier.padding(end = 12.dp)
+                        modifier = Modifier.padding(end = 8.dp)
                     ) {
-                        Text("Volver")
+                        Icon(
+                            painter = painterResource(Res.drawable.menu_icon),
+                            contentDescription = "Volver menú principal",
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
                 }
             )
@@ -85,11 +99,22 @@ fun DetalleScreen(
                         modifier = Modifier.padding(16.dp)
                     )
 
-                    Button(
+
+                    IconButton(
                         onClick = { viewModel.onFavoritoClicked() },
-                        modifier = Modifier.align(Alignment.Start)
+                        modifier = Modifier.padding(start = 16.dp)
                     ) {
-                        Text(if (state.elemento.esFavorito) "Quitar de favoritos" else "Agregar a favoritos")
+                        Icon(
+                            painter = if (state.elemento.esFavorito) {
+                                painterResource(Res.drawable.addFavClickado)
+                            } else {
+                                painterResource(Res.drawable.addFav)
+                            },
+                            contentDescription = if (state.elemento.esFavorito) "Quitar de favoritos" else "Añadir a favoritos",
+                            modifier = Modifier.size(32.dp),
+                            tint = if (state.elemento.esFavorito) Color.Red else Color.Gray
+                        )
+
                     }
 
                     Spacer(modifier = Modifier.height(20.dp))
@@ -122,7 +147,7 @@ fun DetalleScreen(
                         textDecoration = TextDecoration.Underline
                     )
                     Text(
-                        text = state.elemento.descripcionLarga ?: "No disponible",
+                        text = state.elemento.descripcionLarga?.replace("<br />", "\n")?.replace("<br>", "\n")?.replace("\n\n", "\n")?.replace("&nbsp","") ?: "No disponible",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -16,6 +17,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -24,8 +27,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.dferna14.project.presentation.listado.ElementoItem
+import org.jetbrains.compose.resources.painterResource
+import tuciudaddecerca.composeapp.generated.resources.Res
+import tuciudaddecerca.composeapp.generated.resources.corazon_icon
+import tuciudaddecerca.composeapp.generated.resources.menu_icon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,13 +48,18 @@ fun FavoritosScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Mis Favoritos") },
+                title = { Text("Mis Favoritos",
+                    fontWeight = FontWeight.SemiBold)},
                 actions = {
-                    Button(
+                    IconButton(
                         onClick = onVolverAtras,
-                        modifier = Modifier.padding(end = 12.dp)
+                        modifier = Modifier.padding(end = 8.dp)
                     ) {
-                        Text("Volver atrás")
+                        Icon(
+                            painter = painterResource(Res.drawable.menu_icon),
+                            contentDescription = "Volver menú principal",
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
                 }
             )

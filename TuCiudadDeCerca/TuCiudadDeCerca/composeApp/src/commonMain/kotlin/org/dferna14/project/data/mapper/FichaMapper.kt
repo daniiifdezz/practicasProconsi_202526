@@ -34,7 +34,7 @@ fun ElementoDetalleDTO.toDomain(): Elemento {
     return Elemento(
         id = this.idFicha.toString(),
         nombre = this.nombre,
-        descripcionCorta = this.descripcion,
+        descripcionCorta = this.descripcionCorta,
         descripcionLarga = this.descripcion,
         urlImagen = this.urlImagen,
         galeriaImagenes = this.media?.images ?: emptyList(),

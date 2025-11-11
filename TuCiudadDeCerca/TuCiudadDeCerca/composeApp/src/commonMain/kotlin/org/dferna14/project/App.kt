@@ -25,17 +25,25 @@ import org.dferna14.project.domain.usecase.GetElementoDetalleUseCase
 import org.dferna14.project.domain.usecase.GetElementosUseCase
 import org.dferna14.project.domain.usecase.GetFavoritosUseCase
 import org.dferna14.project.presentation.ListadoVM
+import org.dferna14.project.presentation.contacto.ContactoScreen
 import org.dferna14.project.presentation.detalle.DetalleScreen
 import org.dferna14.project.presentation.detalle.DetalleVM
 import org.dferna14.project.presentation.favoritos.FavoritosScreen
 import org.dferna14.project.presentation.favoritos.FavoritosVM
 import org.dferna14.project.presentation.listado.ListadoScreen
+import org.dferna14.project.presentation.welcome.BienvenidaScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 sealed class Pantalla {
     object Listado : Pantalla()
     data class Detalle(val id: String) : Pantalla()
     object Favoritos : Pantalla()
+
+    object Contacto: Pantalla()
+
+    object Bienvenida: Pantalla()
+
+    object Salir: Pantalla()
 }
 
 
@@ -55,9 +63,18 @@ fun App() {
         val getFavoritosUseCase = remember { GetFavoritosUseCase(elementoRepository) }
 
 
-        var pantallaActual: Pantalla by remember { mutableStateOf(Pantalla.Listado) }
+        var pantallaActual: Pantalla by remember { mutableStateOf(Pantalla.Bienvenida) }
 
         when (val pantalla = pantallaActual) {
+            is Pantalla.Bienvenida -> {
+                BienvenidaScreen(
+                    onEntrarClick = {
+                        pantallaActual = Pantalla.Listado
+                    }
+
+                )
+
+            }
             is Pantalla.Listado -> {
                 val listadoVM = remember { ListadoVM(
                     getElementosUseCase = getElementosUseCase,
@@ -70,6 +87,12 @@ fun App() {
                     },
                     onVerFavoritosClick = {
                         pantallaActual = Pantalla.Favoritos
+                    },
+                    onVerContactoClick = {
+                        pantallaActual = Pantalla.Contacto
+                    },
+                    onVolverInicioClick = {
+                        pantallaActual = Pantalla.Salir
                     }
                 )
             }
@@ -102,6 +125,17 @@ fun App() {
                     }
                 )
             }
+            is Pantalla.Contacto ->{
+                ContactoScreen(
+                    onVolverAtras = {
+                        pantallaActual = Pantalla.Listado
+                    }
+                )
+            }
+            is Pantalla.Salir -> {
+                    pantallaActual = Pantalla.Bienvenida
+            }
+
         }
     }
 }

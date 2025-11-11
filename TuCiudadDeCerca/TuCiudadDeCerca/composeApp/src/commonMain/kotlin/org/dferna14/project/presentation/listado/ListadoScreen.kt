@@ -8,16 +8,17 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,12 +29,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import org.dferna14.project.domain.model.Elemento
 import org.dferna14.project.presentation.ListadoVM
-import androidx.compose.ui.text.font.FontWeight
+import org.jetbrains.compose.resources.painterResource
+import tuciudaddecerca.composeapp.generated.resources.Res
+import tuciudaddecerca.composeapp.generated.resources.corazon_icon
+import tuciudaddecerca.composeapp.generated.resources.salida
+import tuciudaddecerca.composeapp.generated.resources.usuario_icon
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +47,9 @@ import androidx.compose.ui.text.font.FontWeight
 fun ListadoScreen(
     viewModel: ListadoVM,
     onElementoClick: (String) -> Unit,
-    onVerFavoritosClick: () -> Unit
+    onVerFavoritosClick: () -> Unit,
+    onVerContactoClick: () -> Unit,
+    onVolverInicioClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -51,8 +59,38 @@ fun ListadoScreen(
                 title = { Text("Puntos de interés ciudad de León",
                         fontWeight = FontWeight.SemiBold)},
                 actions = {
-                    Button(onClick = onVerFavoritosClick, modifier = Modifier.padding(end = 16.dp) ) {
-                        Text("Favoritos")
+
+                    IconButton(
+                        onClick = onVerFavoritosClick,
+                        modifier = Modifier.padding(end = 8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.corazon_icon),
+                            contentDescription = "Ver favoritos",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+
+                    IconButton(
+                        onClick = onVerContactoClick,
+                        modifier = Modifier.padding(end = 12.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.usuario_icon),
+                            contentDescription = "Contacto",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+
+                    IconButton(
+                        onClick = onVolverInicioClick,
+                        modifier = Modifier.padding(end = 12.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.salida),
+                            contentDescription = "Salir",
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
                 }
 
@@ -95,9 +133,7 @@ fun ListadoScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
-    Card(
-        //modifier = Modifier.fillMaxWidth(),
-    ) {
+    Card{
         if (elemento.urlImagen != null) {
             KamelImage(
                 resource = asyncPainterResource(data = elemento.urlImagen),
@@ -128,7 +164,7 @@ fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
             }
             Spacer (Modifier.height(4.dp))
 
-            Text(text = elemento.descripcionCorta, style = MaterialTheme.typography.bodySmall)
+            Text(text = elemento.descripcionCorta.replace("&nbsp", ""), style = MaterialTheme.typography.bodySmall)
         }
     }
 }
