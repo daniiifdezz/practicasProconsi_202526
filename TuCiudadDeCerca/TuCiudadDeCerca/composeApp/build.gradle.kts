@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+
 }
 
 
@@ -81,6 +82,22 @@ kotlin {
 
 }
 
+val jvmMainJar by tasks.registering(Jar::class) {
+    group = "build"
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes["Main-Class"] = "org.dferna14.project.MainKt"
+    }
+
+    from(kotlin.targets["jvm"].compilations["main"].output.allOutputs)
+
+    dependsOn(configurations["jvmRuntimeClasspath"])
+    from({
+        configurations["jvmRuntimeClasspath"].map { if (it.isDirectory) it else zipTree(it) }
+    })
+}
+
+
 //configuracion de android
 android {
     namespace = "org.dferna14.project"
@@ -102,16 +119,27 @@ android {
         schemaDirectory("${projectDir}/schemas")
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("keystore/my-release-key.jks")
+            storePassword = "psswproconsi"
+            keyAlias = "proconsi_key"
+            keyPassword = "psswproconsi"
+        }
+    }
 
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
 
 }
 
