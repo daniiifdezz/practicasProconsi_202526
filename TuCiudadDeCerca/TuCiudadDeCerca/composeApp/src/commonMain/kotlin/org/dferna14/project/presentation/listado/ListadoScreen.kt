@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -23,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,11 +37,14 @@ import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import org.dferna14.project.domain.model.Elemento
 import org.dferna14.project.presentation.ListadoVM
+import org.dferna14.project.presentation.utils.FondoLeon
 import org.jetbrains.compose.resources.painterResource
 import tuciudaddecerca.composeapp.generated.resources.Res
 import tuciudaddecerca.composeapp.generated.resources.corazon_icon
 import tuciudaddecerca.composeapp.generated.resources.salida
 import tuciudaddecerca.composeapp.generated.resources.usuario_icon
+import androidx.compose.ui.graphics.Color
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,87 +58,102 @@ fun ListadoScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Puntos de interés ciudad de León",
-                        fontWeight = FontWeight.SemiBold)},
-                actions = {
+    FondoLeon {
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            "Puntos de interés ciudad de León",
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    },
+                    actions = {
 
-                    IconButton(
-                        onClick = onVerFavoritosClick,
-                        modifier = Modifier.padding(end = 8.dp)
+                        IconButton(
+                            onClick = onVerFavoritosClick,
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.corazon_icon),
+                                contentDescription = "Ver favoritos",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+
+                        IconButton(
+                            onClick = onVerContactoClick,
+                            modifier = Modifier.padding(end = 12.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.usuario_icon),
+                                contentDescription = "Contacto",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+
+                        IconButton(
+                            onClick = onVolverInicioClick,
+                            modifier = Modifier.padding(end = 12.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.salida),
+                                contentDescription = "Salir",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Black.copy(alpha = 0.4f),
+                        titleContentColor = Color.White,
+                        actionIconContentColor = Color.White
+                    )
+
+
+                )
+            }
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier.fillMaxSize().padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                if (uiState.isLoading) {
+                    CircularProgressIndicator()
+                } else if (uiState.error != null) {
+                    Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
+                } else {
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = 300.dp),
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.corazon_icon),
-                            contentDescription = "Ver favoritos",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-
-                    IconButton(
-                        onClick = onVerContactoClick,
-                        modifier = Modifier.padding(end = 12.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.usuario_icon),
-                            contentDescription = "Contacto",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-
-                    IconButton(
-                        onClick = onVolverInicioClick,
-                        modifier = Modifier.padding(end = 12.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.salida),
-                            contentDescription = "Salir",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                }
-
-
-            )
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
-            contentAlignment = Alignment.Center
-        ) {
-            if (uiState.isLoading) {
-                CircularProgressIndicator()
-            } else if (uiState.error != null) {
-                Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
-            } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 300.dp),
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(uiState.elemento) { elemento ->
-                        ElementoItem(
-                            elemento = elemento,
-                            onClick = {
-                                onElementoClick(elemento.id)
-                            }
-                        )
+                        items(uiState.elemento) { elemento ->
+                            ElementoItem(
+                                elemento = elemento,
+                                onClick = {
+                                    onElementoClick(elemento.id)
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
+        }
     }
-}
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
-    Card{
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF202020).copy(alpha = 0.8f)
+        )
+    )  {
         if (elemento.urlImagen != null) {
             KamelImage(
                 resource = asyncPainterResource(data = elemento.urlImagen),
@@ -151,7 +171,8 @@ fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
                 Text(
                     text = elemento.nombre,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    color = Color.White
                 )
 
                 if (elemento.esFavorito) {
@@ -162,9 +183,13 @@ fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
                     )
                 }
             }
-            Spacer (Modifier.height(4.dp))
+            Spacer(Modifier.height(4.dp))
 
-            Text(text = elemento.descripcionCorta.replace("&nbsp", ""), style = MaterialTheme.typography.bodySmall)
+            Text(
+                text = elemento.descripcionCorta.replace("&nbsp", ""),
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White
+            )
         }
     }
 }
