@@ -76,6 +76,7 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            //implementation(compose.desktop.ui.window)
         }
     }
 
@@ -133,6 +134,12 @@ android {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("release")
 
+            applicationVariants.all {
+                outputs.all {
+                    val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+                    outputImpl.outputFileName = "TuCiudadDeCerca.apk"
+                }
+            }
         }
     }
     compileOptions {
@@ -164,7 +171,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.dferna14.project"
+            packageName = "TuCiudadDeCerca"
             packageVersion = "1.0.0"
         }
     }

@@ -82,8 +82,7 @@ data-store-preferences = { module = "androidx.datastore:datastore-preferences", 
 
 kamel-image-default = { module = "media.kamel:kamel-image-default", version.ref = "kamel" }
 
-
-
+ui-window = { module = "org.jetbrains.compose.ui:ui-window", version.ref = "composeMultiplatform" }
 
 
 [plugins]

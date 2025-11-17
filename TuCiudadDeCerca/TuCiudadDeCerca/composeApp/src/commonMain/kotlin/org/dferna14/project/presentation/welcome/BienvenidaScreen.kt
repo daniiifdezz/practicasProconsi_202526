@@ -1,6 +1,9 @@
 package org.dferna14.project.presentation.welcome
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,11 +13,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -22,22 +26,40 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import tuciudaddecerca.composeapp.generated.resources.Res
 import tuciudaddecerca.composeapp.generated.resources.entrarApp
+import tuciudaddecerca.composeapp.generated.resources.leonciudad
 
 
 @Composable
 fun BienvenidaScreen(onEntrarClick: () -> Unit) {
-    Scaffold { paddingValues ->
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.leonciudad),
+            contentDescription = "Fondo de la ciudad de León",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f))
+        )
+
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Bienvenido a",
-                style = MaterialTheme.typography.headlineMedium
+                text = "Bienvenid@ a",
+                style = MaterialTheme.typography.headlineMedium,
+                color = Color.White
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -46,7 +68,7 @@ fun BienvenidaScreen(onEntrarClick: () -> Unit) {
                 text = "TuCiudadDeCerca",
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
+                color = Color.White,
                 textAlign = TextAlign.Center
             )
 
@@ -59,7 +81,8 @@ fun BienvenidaScreen(onEntrarClick: () -> Unit) {
                 Icon(
                     painter = painterResource(Res.drawable.entrarApp),
                     contentDescription = "Volver menú principal",
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    tint = Color.White
                 )
             }
         }

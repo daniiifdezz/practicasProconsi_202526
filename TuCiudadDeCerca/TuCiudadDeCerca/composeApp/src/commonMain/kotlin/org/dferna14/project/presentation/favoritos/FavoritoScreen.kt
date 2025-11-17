@@ -22,14 +22,17 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.dferna14.project.presentation.listado.ElementoItem
+import org.dferna14.project.presentation.utils.FondoLeon
 import org.jetbrains.compose.resources.painterResource
 import tuciudaddecerca.composeapp.generated.resources.Res
 import tuciudaddecerca.composeapp.generated.resources.corazon_icon
@@ -44,62 +47,72 @@ fun FavoritosScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    FondoLeon {
+        Scaffold(
+            containerColor = Color.Transparent,
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Mis Favoritos",
-                    fontWeight = FontWeight.SemiBold)},
-                actions = {
-                    IconButton(
-                        onClick = onVolverAtras,
-                        modifier = Modifier.padding(end = 8.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.menu_icon),
-                            contentDescription = "Volver menú principal",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
-
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            if (uiState.favoritos.isEmpty()) {
-                Box(
-
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("No has añadido ningún favorito.")
-                }
-            } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 300.dp),
-                    modifier = Modifier.weight(1f).fillMaxWidth(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(uiState.favoritos) { elemento ->
-                        ElementoItem(
-                            elemento = elemento,
-                            onClick = { onElementoClick(elemento.id) }
-                        )
-                    }
-                }
+            topBar = {
+                TopAppBar(
+                    title = { Text("Mis Favoritos",
+                        fontWeight = FontWeight.SemiBold)},
+                    actions = {
+                        IconButton(
+                            onClick = onVolverAtras,
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.menu_icon),
+                                contentDescription = "Volver menú principal",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Black.copy(alpha = 0.4f),
+                        titleContentColor = Color.White,
+                        actionIconContentColor = Color.White
+                    )
+                )
             }
+        ) { paddingValues ->
 
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                if (uiState.favoritos.isEmpty()) {
+                    Box(
+
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("No has añadido ningún favorito.",
+                            color = Color.White)
+                    }
+                } else {
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = 300.dp),
+                        modifier = Modifier.weight(1f).fillMaxWidth(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(uiState.favoritos) { elemento ->
+                            ElementoItem(
+                                elemento = elemento,
+                                onClick = { onElementoClick(elemento.id) }
+                            )
+                        }
+                    }
+                }
+
+            }
         }
     }
+
 
 }
