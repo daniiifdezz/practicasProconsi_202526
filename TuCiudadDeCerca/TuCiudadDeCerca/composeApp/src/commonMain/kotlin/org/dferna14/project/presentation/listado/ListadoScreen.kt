@@ -186,7 +186,7 @@ fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
             Spacer(Modifier.height(4.dp))
 
             Text(
-                text = elemento.descripcionCorta.replace("&nbsp", ""),
+                text = elemento.descripcionCorta?.replace("&nbsp", "") ?: "",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.White
             )

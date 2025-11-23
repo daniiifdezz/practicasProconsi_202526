@@ -62,8 +62,10 @@ fun DetalleScreen(
                 TopAppBar(
                     title = {
 
-                        Text("Detalle del Elemento",
-                            color = Color.White)
+                        Text(
+                            "Detalle del Elemento",
+                            color = Color.White
+                        )
 
                     },
                     actions = {
@@ -105,7 +107,7 @@ fun DetalleScreen(
                             .padding(paddingValues)
                             .verticalScroll(rememberScrollState())
                     ) {
-
+                        //titulo
                         Text(
                             text = state.elemento.nombre,
                             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.SemiBold),
@@ -113,7 +115,7 @@ fun DetalleScreen(
                             color = Color.White
                         )
 
-
+                        //boton fav
                         IconButton(
                             onClick = { viewModel.onFavoritoClicked() },
                             modifier = Modifier.padding(start = 16.dp)
@@ -133,6 +135,7 @@ fun DetalleScreen(
 
                         Spacer(modifier = Modifier.height(20.dp))
 
+                        //galeria
                         Text(
                             text = "Galería de imágenes",
                             style = MaterialTheme.typography.titleLarge,
@@ -154,6 +157,8 @@ fun DetalleScreen(
                                 )
                             }
                         }
+                        //descripcion
+
 
                         Text(
                             text = "Descripción",
@@ -163,13 +168,86 @@ fun DetalleScreen(
                             color = Color.White
                         )
                         Text(
-                            text = state.elemento.descripcionLarga?.replace("<br />", "\n")
-                                ?.replace("<br>", "\n")?.replace("\n\n", "\n")?.replace("&nbsp", "")
-                                ?: "No disponible",
+                            text = limpiarHtml(state.elemento.descripcionLarga),
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.White,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                         )
+                        state.elemento.curiosidades.forEach { seccion ->
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = seccion.titulo,
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                textDecoration = TextDecoration.Underline,
+                                color = Color.White
+                            )
+                            Text(
+                                text = limpiarHtml(seccion.contenido),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            )
+                        }
+                        if (state.elemento.listaVideos.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            val videoUrl = state.elemento.listaVideos.first()
+
+                            val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
+
+                            Button(
+                                onClick = { uriHandler.openUri(videoUrl) },
+                                modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
+                                // colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                            ) {
+                                Text("Ver Vídeo")
+                            }
+                        }
+                        val hayContacto = !state.elemento.direccion.isNullOrBlank() ||
+                                !state.elemento.telefono.isNullOrBlank() ||
+                                !state.elemento.email.isNullOrBlank()
+
+                        if (hayContacto) {
+                            Spacer(modifier = Modifier.height(24.dp))
+                            Text(
+                                text = "Información de interés",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                state.elemento.direccion?.let {
+                                    if (it.isNotBlank()) {
+                                        Text(
+                                            text = "Dirección: $it",
+                                            color = Color.White,
+                                            modifier = Modifier.padding(bottom = 4.dp)
+                                        )
+                                    }
+                                }
+                                state.elemento.telefono?.let {
+                                    if (it.isNotBlank()) {
+                                        Text(
+                                            text = "Teléfono: $it",
+                                            color = Color.White,
+                                            modifier = Modifier.padding(bottom = 4.dp)
+                                        )
+                                    }
+                                }
+                                state.elemento.email?.let {
+                                    if (it.isNotBlank()) {
+                                        Text(
+                                            text = "Email: $it",
+                                            color = Color.White
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(32.dp))
 
                     }
                 }
@@ -187,6 +265,17 @@ fun DetalleScreen(
                 }
             }
         }
+
+
     }
 
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun limpiarHtml(texto: String?): String {
+    return texto?.replace("<br />", "\n")
+        ?.replace("<br>", "\n")
+        ?.replace("\n\n", "\n")
+        ?.replace("&nbsp", "")
+        ?: "No disponible"
 }
