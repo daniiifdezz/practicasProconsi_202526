@@ -7,7 +7,7 @@ data class Elemento(
 
     val id: String,
     val nombre: String,
-    val descripcionCorta: String,
+    val descripcionCorta: String?,
     val fechaInicio: String?,
     val fechaFin: String?,
     val horaInicio: String?,
@@ -22,5 +22,17 @@ data class Elemento(
     val descripcionLarga: String? = null,
     val galeriaImagenes: List<String>? = emptyList(),
     val esFavorito:Boolean = false,
+    val listaVideos: List<String> = emptyList(),
+    val curiosidades: List<SeccionExtra> = emptyList(),
+    val telefono: String? = null,
+    val email: String? = null,
+    val direccion: String? = null
 
+
+)
+
+@Serializable
+data class SeccionExtra(
+    val titulo: String,
+    val contenido: String
 )

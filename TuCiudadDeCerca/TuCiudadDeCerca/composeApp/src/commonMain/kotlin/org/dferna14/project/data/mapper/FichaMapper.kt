@@ -3,6 +3,7 @@ package org.dferna14.project.data.mapper
 import org.dferna14.project.data.remote.dto.ElementoDTO
 import org.dferna14.project.data.remote.dto.ElementoDetalleDTO
 import org.dferna14.project.domain.model.Elemento
+import org.dferna14.project.domain.model.SeccionExtra
 
 
 /*
@@ -38,6 +39,16 @@ fun ElementoDetalleDTO.toDomain(): Elemento {
         descripcionLarga = this.descripcion,
         urlImagen = this.urlImagen,
         galeriaImagenes = this.media?.images ?: emptyList(),
+        listaVideos = this.media?.videos ?: emptyList(),
+        curiosidades = this.subFichas.map { sub ->
+            SeccionExtra(
+                titulo = sub.nombre,
+                contenido = sub.descripcion ?: ""
+            )
+        },
+        telefono = this.telefono,
+        email = this.email,
+        direccion = this.direccion,
         latitud = this.latitud,
         longitud = this.longitud,
         fechaInicio = null,
