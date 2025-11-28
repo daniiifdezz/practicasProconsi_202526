@@ -33,7 +33,7 @@ import org.dferna14.project.presentation.favoritos.FavoritosVM
 import org.dferna14.project.presentation.listado.ListadoScreen
 import org.dferna14.project.presentation.welcome.BienvenidaScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
+//revisar compose tema de estados, cambio de contenidos
 sealed class Pantalla {
     object Listado : Pantalla()
     data class Detalle(val id: String) : Pantalla()
@@ -45,7 +45,7 @@ sealed class Pantalla {
 
     object Salir: Pantalla()
 }
-
+//menu lateral, ir hacia atras, versionado.
 
 @Composable
 @Preview
@@ -80,6 +80,8 @@ fun App() {
                     getElementosUseCase = getElementosUseCase,
                     getFavoritosUseCase = getFavoritosUseCase
                 ) }
+
+                //los vm deberian instanciarse una unica vez
                 ListadoScreen(
                     viewModel = listadoVM,
                     onElementoClick = { elementoId ->

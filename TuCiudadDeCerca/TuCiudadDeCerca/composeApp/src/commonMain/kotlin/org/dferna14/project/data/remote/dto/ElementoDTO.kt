@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.dferna14.project.domain.model.Elemento
 import kotlin.String
-
+//no es necesario el serialName
 @Serializable
 data class ElementoDTO(
     @SerialName("idFicha")

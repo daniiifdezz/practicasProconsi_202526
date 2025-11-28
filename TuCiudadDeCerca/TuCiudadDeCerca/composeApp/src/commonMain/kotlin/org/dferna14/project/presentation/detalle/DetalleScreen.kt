@@ -55,7 +55,7 @@ fun DetalleScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     FondoLeon {
-
+//usar iconos mas simples
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {
@@ -63,7 +63,7 @@ fun DetalleScreen(
                     title = {
 
                         Text(
-                            "Detalle del Elemento",
+                            "Detalle del lugar de interes",
                             color = Color.White
                         )
 
@@ -142,12 +142,13 @@ fun DetalleScreen(
                             modifier = Modifier.padding(horizontal = 16.dp),
                             color = Color.White
                         )
+                        //lazy es reciclable, echarle ojo al concepto
                         LazyRow(
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             items(state.elemento.galeriaImagenes ?: emptyList()) { imageUrl ->
-                                KamelImage(
+                                KamelImage(//no deberia de usarlo
                                     resource = asyncPainterResource(data = imageUrl),
                                     contentDescription = "Imagen de la galería",
                                     modifier = Modifier
