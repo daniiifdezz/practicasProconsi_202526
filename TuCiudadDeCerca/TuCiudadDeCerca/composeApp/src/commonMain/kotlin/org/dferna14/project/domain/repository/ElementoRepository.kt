@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import org.dferna14.project.domain.model.Elemento
 import tuciudaddecerca.composeapp.generated.resources.Res
 
-
+//escalabilidad
 interface ElementoRepository{
     suspend fun getElementos(): Result<List<Elemento>>
     suspend fun getDetalleElemento(id:String): Result<Elemento>
