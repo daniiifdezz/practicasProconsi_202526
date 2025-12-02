@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
+
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,23 +34,27 @@ import org.dferna14.project.presentation.favoritos.FavoritosVM
 import org.dferna14.project.presentation.listado.ListadoScreen
 import org.dferna14.project.presentation.welcome.BienvenidaScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
+
 //revisar compose tema de estados, cambio de contenidos
 sealed class Pantalla {
     object Listado : Pantalla()
     data class Detalle(val id: String) : Pantalla()
     object Favoritos : Pantalla()
 
-    object Contacto: Pantalla()
+    object Contacto : Pantalla()
 
-    object Bienvenida: Pantalla()
+    object Bienvenida : Pantalla()
 
-    object Salir: Pantalla()
+    object Salir : Pantalla()
 }
 //menu lateral, ir hacia atras, versionado.
 
 @Composable
 @Preview
-fun App() {
+fun App(
+    pantallaActual: Pantalla = Pantalla.Bienvenida,
+    onPantallaChange: (Pantalla) -> Unit
+) {
     MaterialTheme {
 
         val elementoRepository = remember {
@@ -63,42 +68,45 @@ fun App() {
         val getFavoritosUseCase = remember { GetFavoritosUseCase(elementoRepository) }
 
 
-        var pantallaActual: Pantalla by remember { mutableStateOf(Pantalla.Bienvenida) }
-
         when (val pantalla = pantallaActual) {
             is Pantalla.Bienvenida -> {
                 BienvenidaScreen(
                     onEntrarClick = {
-                        pantallaActual = Pantalla.Listado
+                        onPantallaChange(Pantalla.Listado)
                     }
 
                 )
 
             }
+
             is Pantalla.Listado -> {
-                val listadoVM = remember { ListadoVM(
-                    getElementosUseCase = getElementosUseCase,
-                    getFavoritosUseCase = getFavoritosUseCase
-                ) }
+                val listadoVM = remember {
+                    ListadoVM(
+                        getElementosUseCase = getElementosUseCase,
+                        getFavoritosUseCase = getFavoritosUseCase
+                    )
+                }
 
                 //los vm deberian instanciarse una unica vez
                 ListadoScreen(
                     viewModel = listadoVM,
-                    onElementoClick = { elementoId ->
-                        pantallaActual = Pantalla.Detalle(elementoId)
+                    onElementoClick = {
+                        onPantallaChange(Pantalla.Detalle(it))
                     },
                     onVerFavoritosClick = {
-                        pantallaActual = Pantalla.Favoritos
+                        onPantallaChange(Pantalla.Favoritos)
                     },
                     onVerContactoClick = {
-                        pantallaActual = Pantalla.Contacto
+                        onPantallaChange(Pantalla.Contacto)
                     },
                     onVolverInicioClick = {
-                        pantallaActual = Pantalla.Salir
+                        onPantallaChange(Pantalla.Salir)
                     }
                 )
             }
-            is Pantalla.Detalle->{
+
+            is Pantalla.Detalle -> {
+                //recreamos si cambia el id
                 val detalleVM = remember(pantalla.id) {
                     DetalleVM(
                         elementoId = pantalla.id,
@@ -110,32 +118,35 @@ fun App() {
                 DetalleScreen(
                     viewModel = detalleVM,
                     onVolverAtras = {
-                        pantallaActual = Pantalla.Listado
+                        onPantallaChange(Pantalla.Listado)
                     }
                 )
             }
-            is Pantalla.Favoritos ->{
+
+            is Pantalla.Favoritos -> {
                 val favoritosVM = remember { FavoritosVM(getFavoritosUseCase) }
 
                 FavoritosScreen(
                     viewModel = favoritosVM,
                     onVolverAtras = {
-                        pantallaActual = Pantalla.Listado
+                        onPantallaChange(Pantalla.Listado)
                     },
                     onElementoClick = { elementoId ->
-                        pantallaActual = Pantalla.Detalle(elementoId)
+                        onPantallaChange(Pantalla.Detalle(elementoId))
                     }
                 )
             }
-            is Pantalla.Contacto ->{
+
+            is Pantalla.Contacto -> {
                 ContactoScreen(
                     onVolverAtras = {
-                        pantallaActual = Pantalla.Listado
+                        onPantallaChange(Pantalla.Listado)
                     }
                 )
             }
+
             is Pantalla.Salir -> {
-                    pantallaActual = Pantalla.Bienvenida
+                onPantallaChange(Pantalla.Bienvenida)
             }
 
         }

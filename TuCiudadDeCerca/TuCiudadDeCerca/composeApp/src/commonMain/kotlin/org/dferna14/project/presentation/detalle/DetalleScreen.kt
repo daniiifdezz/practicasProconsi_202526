@@ -30,6 +30,12 @@ import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -68,15 +74,16 @@ fun DetalleScreen(
                         )
 
                     },
-                    actions = {
+                    navigationIcon = {
+
 
                         IconButton(
                             onClick = onVolverAtras,
-                            modifier = Modifier.padding(end = 8.dp)
+                            modifier = Modifier.padding(start = 8.dp)
                         ) {
                             Icon(
-                                painter = painterResource(Res.drawable.menu_icon),
-                                contentDescription = "Volver menú principal",
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Volver atrás",
                                 tint = Color.White,
                                 modifier = Modifier.size(24.dp)
                             )
@@ -121,10 +128,10 @@ fun DetalleScreen(
                             modifier = Modifier.padding(start = 16.dp)
                         ) {
                             Icon(
-                                painter = if (state.elemento.esFavorito) {
-                                    painterResource(Res.drawable.addFavClickado)
+                                imageVector = if (state.elemento.esFavorito) {
+                                    Icons.Filled.Favorite
                                 } else {
-                                    painterResource(Res.drawable.addFav)
+                                    Icons.Outlined.FavoriteBorder
                                 },
                                 contentDescription = if (state.elemento.esFavorito) "Quitar de favoritos" else "Añadir a favoritos",
                                 modifier = Modifier.size(32.dp),
