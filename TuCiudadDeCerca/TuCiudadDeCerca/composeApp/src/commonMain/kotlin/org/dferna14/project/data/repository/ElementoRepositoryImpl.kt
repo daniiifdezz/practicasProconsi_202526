@@ -2,6 +2,9 @@ package org.dferna14.project.data.repository
 
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.RedirectResponseException
+import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -10,15 +13,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.io.IOException
 import org.dferna14.project.data.local.FavoritoDAO
 import org.dferna14.project.data.local.FavoritoEntidad
 import org.dferna14.project.data.mapper.toDomain
 import org.dferna14.project.data.remote.ApiService
+import org.dferna14.project.domain.model.AppError
 import org.dferna14.project.domain.model.Elemento
 import org.dferna14.project.domain.repository.ElementoRepository
 
 
-class ElementoRepositoryImpl(private val apiService: ApiService, private val favoritoDAO: FavoritoDAO) : ElementoRepository {
+class ElementoRepositoryImpl(
+    private val apiService: ApiService,
+    private val favoritoDAO: FavoritoDAO
+) : ElementoRepository {
 
     //simulacion bbdd, para futura implementacion.
     //private val favoritosIds = MutableStateFlow<Set<String>>(emptySet())
@@ -36,9 +44,21 @@ class ElementoRepositoryImpl(private val apiService: ApiService, private val fav
 
             Result.success(elementos)
 
+        } catch (e: RedirectResponseException) {
+            println("Error del cliente (redirección): ${e.message}")
+            Result.failure(AppError.ServerError("Error de redirección."))
+        } catch (e: ClientRequestException) {
+            println("Error del cliente (4xx): ${e.message}")
+            Result.failure(AppError.ServerError("Error de cliente."))
+        } catch (e: ServerResponseException) {
+            println("Error del servidor (5xx): ${e.message}")
+            Result.failure(AppError.ServerError("Error del servidor."))
+        } catch (e: IOException) {
+            println("Error de red al obtener los elementos: ${e.message}")
+            Result.failure(AppError.NetworkError())
         } catch (e: Exception) {
-            println("Error al obtener los elementos del JSON ${e.message}")
-            Result.failure(e)
+            println("Error desconocido al obtener los elementos: ${e.message}")
+            Result.failure(AppError.UnknownError())
         }
     }
 
@@ -52,10 +72,22 @@ class ElementoRepositoryImpl(private val apiService: ApiService, private val fav
 
             Result.success(elementoDetalle)
 
+        }catch (e: RedirectResponseException) {
+            println("Error del cliente (redirección): ${e.message}")
+            Result.failure(AppError.ServerError("Error de redirección."))
+        } catch (e: ClientRequestException) {
+            println("Error del cliente (4xx): ${e.message}")
+            Result.failure(AppError.ServerError("Error de cliente."))
+        } catch (e: ServerResponseException) {
+            println("Error del servidor (5xx): ${e.message}")
+            Result.failure(AppError.ServerError("Error del servidor."))
+        } catch (e: IOException) {
+            println("Error de red al obtener los elementos: ${e.message}")
+            Result.failure(AppError.NetworkError())
         } catch (e: Exception) {
-            Result.failure(e)
+            println("Error desconocido al obtener los elementos: ${e.message}")
+            Result.failure(AppError.UnknownError())
         }
-
     }
 
 
