@@ -14,9 +14,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +35,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -44,7 +54,6 @@ import tuciudaddecerca.composeapp.generated.resources.corazon_icon
 import tuciudaddecerca.composeapp.generated.resources.salida
 import tuciudaddecerca.composeapp.generated.resources.usuario_icon
 import androidx.compose.ui.graphics.Color
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,30 +78,37 @@ fun ListadoScreen(
                             fontWeight = FontWeight.SemiBold
                         )
                     },
+
                     actions = {
 
-                        IconButton(
-                            onClick = onVerFavoritosClick,
-                            modifier = Modifier.padding(end = 8.dp)
-                        ) {
+                        var expanded by remember { mutableStateOf(false) }
+                        IconButton(onClick = { expanded = true }) {
                             Icon(
-                                painter = painterResource(Res.drawable.corazon_icon),
-                                contentDescription = "Ver favoritos",
-                                modifier = Modifier.size(24.dp)
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = "Abrir menú"
                             )
                         }
 
-                        IconButton(
-                            onClick = onVerContactoClick,
-                            modifier = Modifier.padding(end = 12.dp)
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false } //cerrar menu al tocar fuera de el
                         ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.usuario_icon),
-                                contentDescription = "Contacto",
-                                modifier = Modifier.size(24.dp)
+                            DropdownMenuItem(
+                                text = { Text("Favoritos") },
+                                onClick = {
+                                    expanded = false
+                                    onVerFavoritosClick()
+                                }
                             )
-                        }
+                            DropdownMenuItem(
+                                text = { Text("Contacto") },
+                                onClick = {
+                                    expanded = false
+                                    onVerContactoClick()
+                                }
+                            )
 
+                        }
                         IconButton(
                             onClick = onVolverInicioClick,
                             modifier = Modifier.padding(end = 12.dp)
@@ -142,8 +158,8 @@ fun ListadoScreen(
                 }
             }
         }
-        }
     }
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -153,7 +169,7 @@ fun ElementoItem(elemento: Elemento, onClick: () -> Unit) {
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF202020).copy(alpha = 0.8f)
         )
-    )  {
+    ) {
         if (elemento.urlImagen != null) {
             KamelImage(
                 resource = asyncPainterResource(data = elemento.urlImagen),

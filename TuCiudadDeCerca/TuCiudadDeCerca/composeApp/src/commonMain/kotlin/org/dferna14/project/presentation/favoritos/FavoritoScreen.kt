@@ -15,6 +15,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -51,18 +53,20 @@ fun FavoritosScreen(
         Scaffold(
             containerColor = Color.Transparent,
 
+
             topBar = {
                 TopAppBar(
                     title = { Text("Mis Favoritos",
                         fontWeight = FontWeight.SemiBold)},
-                    actions = {
+                    navigationIcon = {
                         IconButton(
                             onClick = onVolverAtras,
-                            modifier = Modifier.padding(end = 8.dp)
+                            modifier = Modifier.padding(start = 8.dp)
                         ) {
                             Icon(
-                                painter = painterResource(Res.drawable.menu_icon),
+                                imageVector = Icons.Filled.ArrowBack,
                                 contentDescription = "Volver menú principal",
+                                tint =  Color.White,
                                 modifier = Modifier.size(24.dp)
                             )
                         }

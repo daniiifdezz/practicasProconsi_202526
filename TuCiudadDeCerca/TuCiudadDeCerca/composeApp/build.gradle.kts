@@ -64,6 +64,10 @@ kotlin {
             implementation(libs.data.store.preferences)
 
             implementation(libs.kamel.image.default)
+            implementation(compose.materialIconsExtended)
+
+
+
 
 
 
