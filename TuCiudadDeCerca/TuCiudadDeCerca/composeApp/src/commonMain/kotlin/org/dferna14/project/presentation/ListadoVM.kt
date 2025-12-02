@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import org.dferna14.project.domain.model.AppError
 import org.dferna14.project.domain.usecase.GetElementosUseCase
 import org.dferna14.project.domain.usecase.GetFavoritosUseCase
 
@@ -41,7 +42,11 @@ class ListadoVM(
                     emit(ElementoUI(isLoading = false, elemento = elementosCombinados))
                 },
                 onFailure = { error ->
-                    emit(ElementoUI(isLoading = false, error = error.message))
+                    val mensaje = when (error) {
+                        is AppError -> error.message
+                        else -> "Ha ocurrido un error inesperado."
+                    }
+                    emit(ElementoUI(isLoading = false, error = mensaje))
                 }
             )
         }
