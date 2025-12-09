@@ -44,6 +44,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import io.kamel.core.ExperimentalKamelApi
 import org.dferna14.project.presentation.utils.FondoLeon
 import org.jetbrains.compose.resources.painterResource
 import tuciudaddecerca.composeapp.generated.resources.Res
@@ -53,7 +54,8 @@ import tuciudaddecerca.composeapp.generated.resources.corazon_icon
 import tuciudaddecerca.composeapp.generated.resources.menu_icon
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+@OptIn(ExperimentalKamelApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DetalleScreen(
     viewModel: DetalleVM,
@@ -61,7 +63,7 @@ fun DetalleScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     FondoLeon {
-//usar iconos mas simples
+
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {
@@ -155,8 +157,9 @@ fun DetalleScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             items(state.elemento.galeriaImagenes ?: emptyList()) { imageUrl ->
-                                KamelImage(//no deberia de usarlo
-                                    resource = asyncPainterResource(data = imageUrl),
+                                KamelImage(
+                                    resource = { asyncPainterResource(data = imageUrl) },
+
                                     contentDescription = "Imagen de la galería",
                                     modifier = Modifier
                                         .height(180.dp)
