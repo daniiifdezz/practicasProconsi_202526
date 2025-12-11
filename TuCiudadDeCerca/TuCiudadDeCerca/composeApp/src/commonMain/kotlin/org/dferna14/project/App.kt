@@ -2,29 +2,9 @@
 
 package org.dferna14.project
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import org.dferna14.project.data.local.database
-import org.dferna14.project.data.remote.ApiService
-import org.dferna14.project.data.remote.ktorClient
-import org.dferna14.project.data.repository.ElementoRepositoryImpl
-import org.dferna14.project.domain.usecase.GestionarFavoritoUseCase
-import org.dferna14.project.domain.usecase.GetElementoDetalleUseCase
-import org.dferna14.project.domain.usecase.GetElementosUseCase
-import org.dferna14.project.domain.usecase.GetFavoritosUseCase
 import org.dferna14.project.presentation.ListadoVM
 import org.dferna14.project.presentation.contacto.ContactoScreen
 import org.dferna14.project.presentation.detalle.DetalleScreen
@@ -34,6 +14,8 @@ import org.dferna14.project.presentation.favoritos.FavoritosVM
 import org.dferna14.project.presentation.listado.ListadoScreen
 import org.dferna14.project.presentation.welcome.BienvenidaScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 //revisar compose tema de estados, cambio de contenidos
 sealed class Pantalla {
@@ -56,18 +38,6 @@ fun App(
     onPantallaChange: (Pantalla) -> Unit
 ) {
     MaterialTheme {
-
-        val elementoRepository = remember {
-            val favoritoDAO = database.favoritoDAO()
-            ElementoRepositoryImpl(ApiService(ktorClient), favoritoDAO)
-        }
-
-        val getElementosUseCase = remember { GetElementosUseCase(elementoRepository) }
-        val getElementoDetalleUseCase = remember { GetElementoDetalleUseCase(elementoRepository) }
-        val gestionarFavoritoUseCase = remember { GestionarFavoritoUseCase(elementoRepository) }
-        val getFavoritosUseCase = remember { GetFavoritosUseCase(elementoRepository) }
-
-
         when (val pantalla = pantallaActual) {
             is Pantalla.Bienvenida -> {
                 BienvenidaScreen(
@@ -80,14 +50,8 @@ fun App(
             }
 
             is Pantalla.Listado -> {
-                val listadoVM = remember {
-                    ListadoVM(
-                        getElementosUseCase = getElementosUseCase,
-                        getFavoritosUseCase = getFavoritosUseCase
-                    )
-                }
+                val listadoVM = koinViewModel<ListadoVM>()
 
-                //los vm deberian instanciarse una unica vez
                 ListadoScreen(
                     viewModel = listadoVM,
                     onElementoClick = {
@@ -106,15 +70,10 @@ fun App(
             }
 
             is Pantalla.Detalle -> {
-                //recreamos si cambia el id
-                val detalleVM = remember(pantalla.id) {
-                    DetalleVM(
-                        elementoId = pantalla.id,
-                        getElementoDetalleUseCase = getElementoDetalleUseCase,
-                        gestionarFavoritoUseCase = gestionarFavoritoUseCase,
-                        getFavoritosUseCase = getFavoritosUseCase
-                    )
-                }
+                val detalleVM = koinViewModel<DetalleVM>(
+                    parameters = { parametersOf(pantalla.id) }
+                )
+                
                 DetalleScreen(
                     viewModel = detalleVM,
                     onVolverAtras = {
@@ -124,7 +83,7 @@ fun App(
             }
 
             is Pantalla.Favoritos -> {
-                val favoritosVM = remember { FavoritosVM(getFavoritosUseCase) }
+                val favoritosVM = koinViewModel<FavoritosVM>()
 
                 FavoritosScreen(
                     viewModel = favoritosVM,
