@@ -1,59 +1,57 @@
 package org.dferna14.project.presentation.detalle
 
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerType
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
 import io.kamel.core.ExperimentalKamelApi
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
+import kotlinx.coroutines.launch
 import org.dferna14.project.presentation.utils.FondoLeon
-import org.jetbrains.compose.resources.painterResource
-import tuciudaddecerca.composeapp.generated.resources.Res
-import tuciudaddecerca.composeapp.generated.resources.addFav
-import tuciudaddecerca.composeapp.generated.resources.addFavClickado
-import tuciudaddecerca.composeapp.generated.resources.corazon_icon
-import tuciudaddecerca.composeapp.generated.resources.menu_icon
-
-
 
 @OptIn(ExperimentalKamelApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -151,10 +149,27 @@ fun DetalleScreen(
                             modifier = Modifier.padding(horizontal = 16.dp),
                             color = Color.White
                         )
-                        //lazy es reciclable, echarle ojo al concepto
+                        
+                        // arrastrar con raton
+                        val scrollState = rememberLazyListState()
+                        val coroutineScope = rememberCoroutineScope()
+                        
                         LazyRow(
+                            state = scrollState,
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.pointerInput(Unit) {
+                                detectDragGestures { change, dragAmount ->
+
+                                    //solo para el raton
+                                    if (change.type == PointerType.Mouse) {
+                                        change.consume()
+                                        coroutineScope.launch {
+                                            scrollState.scrollBy(-dragAmount.x)
+                                        }
+                                    }
+                                }
+                            }
                         ) {
                             items(state.elemento.galeriaImagenes ?: emptyList()) { imageUrl ->
                                 KamelImage(
