@@ -22,68 +22,77 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.DrawableResource
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import org.dferna14.project.presentation.listado.ListadoScreen
 import org.jetbrains.compose.resources.painterResource
 import tuciudaddecerca.composeapp.generated.resources.Res
 import tuciudaddecerca.composeapp.generated.resources.entrarApp
 import tuciudaddecerca.composeapp.generated.resources.leonciudad
 
 
-@Composable
-fun BienvenidaScreen(onEntrarClick: () -> Unit) {
-
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Image(
-            painter = painterResource(Res.drawable.leonciudad),
-            contentDescription = "Fondo de la ciudad de León",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+class BienvenidaScreen : Screen {
+    
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
 
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f))
-        )
-
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxSize()
         ) {
-            Text(
-                text = "Bienvenid@ a",
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.White
+            Image(
+                painter = painterResource(Res.drawable.leonciudad),
+                contentDescription = "Fondo de la ciudad de León",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "TuCiudadDeCerca",
-                style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                textAlign = TextAlign.Center
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f))
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
 
-            IconButton(
-                onClick = onEntrarClick,
-                modifier = Modifier.size(80.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    painter = painterResource(Res.drawable.entrarApp),
-                    contentDescription = "Volver menú principal",
-                    modifier = Modifier.fillMaxSize(),
-                    tint = Color.White
+                Text(
+                    text = "Bienvenid@ a",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.White
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "TuCiudadDeCerca",
+                    style = MaterialTheme.typography.displaySmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                IconButton(
+                    onClick = { 
+                        navigator.push(ListadoScreen())
+                    },
+                    modifier = Modifier.size(80.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.entrarApp),
+                        contentDescription = "Entrar",
+                        modifier = Modifier.fillMaxSize(),
+                        tint = Color.White
+                    )
+                }
             }
         }
     }

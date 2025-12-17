@@ -24,144 +24,144 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import org.dferna14.project.presentation.utils.FondoLeon
 import org.jetbrains.compose.resources.painterResource
 import tuciudaddecerca.composeapp.generated.resources.Res
 import tuciudaddecerca.composeapp.generated.resources.menu_icon
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ContactoScreen(onVolverAtras: () -> Unit) {
-    FondoLeon {
-        Scaffold(
-            containerColor = Color.Transparent,
+class ContactoScreen : Screen {
+    
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
 
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = { Text("Información de Contacto",
-                        textDecoration = TextDecoration.Underline,
-                        color = Color.White) },
-                    actions = {
-                        IconButton(
-                            onClick = onVolverAtras,
-                            modifier = Modifier.padding(end = 8.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.menu_icon),
-                                contentDescription = "Volver menú principal",
-                                modifier = Modifier.size(24.dp),
-                                tint = Color.White,
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Black.copy(alpha = 0.4f),
-                        titleContentColor = Color.White,
-                        actionIconContentColor = Color.White
-                    )
-                )
-            }
-        )
-        {
-                paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Desarrollado por:",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.White
-                )
+        FondoLeon {
+            Scaffold(
+                containerColor = Color.Transparent,
 
-                Spacer(Modifier.height(8.dp))
-
-                Text(
-                    text = "Daniel Fernández-Muñiz Arribas",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-
-                Spacer(Modifier.height(16.dp))
-
-                Text(
-                    text = "Correo Electrónico:",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.White
-                )
-
-                Spacer(Modifier.height(8.dp))
-                SelectionContainer {
-                    Text(
-                        text = "dferna14@estudiantes.unileon.es",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                topBar = {
+                    CenterAlignedTopAppBar(
+                        title = { Text("Información de Contacto",
+                            textDecoration = TextDecoration.Underline,
+                            color = Color.White) },
+                        actions = {
+                            IconButton(
+                                onClick = { navigator.pop() },
+                                modifier = Modifier.padding(end = 8.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.menu_icon),
+                                    contentDescription = "Volver atrás",
+                                    modifier = Modifier.size(24.dp),
+                                    tint = Color.White,
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.Black.copy(alpha = 0.4f),
+                            titleContentColor = Color.White,
+                            actionIconContentColor = Color.White
+                        )
                     )
                 }
+            )
+            {
+                    paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Desarrollado por:",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.White
+                    )
+
+                    Spacer(Modifier.height(8.dp))
+
+                    Text(
+                        text = "Daniel Fernández-Muñiz Arribas",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Text(
+                        text = "Correo Electrónico:",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.White
+                    )
+
+                    Spacer(Modifier.height(8.dp))
+                    SelectionContainer {
+                        Text(
+                            text = "dferna14@estudiantes.unileon.es",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White
+                        )
+                    }
 
 
-                Spacer(Modifier.height(16.dp))
+                    Spacer(Modifier.height(16.dp))
 
-                Text(
-                    text = "LinkedIn:",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.White
-                )
+                    Text(
+                        text = "LinkedIn:",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.White
+                    )
 
-                Spacer(Modifier.height(8.dp))
-
-
-                HyperlinkText(
-                    text = "linkedin.com/dferna14",
-                    url = "https://www.linkedin.com/in/daniel-fern%C3%A1ndez-mu%C3%B1iz-arribas-25593a317/",
-
-                )
-
-                Spacer(Modifier.height(16.dp))
-
-                Text(
-                    text = "GitHub:",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.White
-
-                )
-
-                Spacer(Modifier.height(8.dp))
-
-                HyperlinkText(
-                    text = "github.com/daniiifdezz",
-                    url = "https://github.com/daniiifdezz",
-
-                )
+                    Spacer(Modifier.height(8.dp))
 
 
+                    HyperlinkText(
+                        text = "linkedin.com/dferna14",
+                        url = "https://www.linkedin.com/in/daniel-fern%C3%A1ndez-mu%C3%B1iz-arribas-25593a317/",
 
+                        )
 
+                    Spacer(Modifier.height(16.dp))
 
+                    Text(
+                        text = "GitHub:",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.White
+
+                    )
+
+                    Spacer(Modifier.height(8.dp))
+
+                    HyperlinkText(
+                        text = "github.com/daniiifdezz",
+                        url = "https://github.com/daniiifdezz",
+
+                        )
+                }
             }
         }
     }
 
-}
+    @Composable
+    private fun HyperlinkText(text: String, url: String) {
+        val uriHandler = LocalUriHandler.current
 
-
-
-@Composable
-private fun HyperlinkText(text: String, url: String) {
-    val uriHandler = LocalUriHandler.current
-
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodyLarge.copy(
-            color = Color.White,
-            textDecoration = TextDecoration.Underline
-        ),
-        modifier = Modifier.clickable {
-            uriHandler.openUri(url)
-        }
-    )
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                color = Color.White,
+                textDecoration = TextDecoration.Underline
+            ),
+            modifier = Modifier.clickable {
+                uriHandler.openUri(url)
+            }
+        )
+    }
 }

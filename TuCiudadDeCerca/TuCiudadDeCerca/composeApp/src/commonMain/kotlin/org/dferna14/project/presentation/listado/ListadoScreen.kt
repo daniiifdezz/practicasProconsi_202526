@@ -15,9 +15,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -40,121 +37,128 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import org.dferna14.project.domain.model.Elemento
 import org.dferna14.project.presentation.ListadoVM
+import org.dferna14.project.presentation.contacto.ContactoScreen
+import org.dferna14.project.presentation.detalle.DetalleScreen
+import org.dferna14.project.presentation.favoritos.FavoritosScreen
 import org.dferna14.project.presentation.utils.FondoLeon
+import org.dferna14.project.presentation.welcome.BienvenidaScreen
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 import tuciudaddecerca.composeapp.generated.resources.Res
-import tuciudaddecerca.composeapp.generated.resources.corazon_icon
 import tuciudaddecerca.composeapp.generated.resources.salida
-import tuciudaddecerca.composeapp.generated.resources.usuario_icon
-import androidx.compose.ui.graphics.Color
 
+class ListadoScreen : Screen {
+    
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+        
+        // CORREGIDO: Usamos koinViewModel() en lugar de koinScreenModel()
+        val viewModel = koinViewModel<ListadoVM>()
+        
+        val uiState by viewModel.uiState.collectAsState()
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ListadoScreen(
-    viewModel: ListadoVM,
-    onElementoClick: (String) -> Unit,
-    onVerFavoritosClick: () -> Unit,
-    onVerContactoClick: () -> Unit,
-    onVolverInicioClick: () -> Unit
-) {
-    val uiState by viewModel.uiState.collectAsState()
+        FondoLeon {
+            Scaffold(
+                containerColor = Color.Transparent,
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                "Puntos de interés ciudad de León",
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        },
 
+                        actions = {
 
+                            var expanded by remember { mutableStateOf(false) }
+                            IconButton(onClick = { expanded = true }) {
+                                Icon(
+                                    imageVector = Icons.Default.MoreVert,
+                                    contentDescription = "Abrir menú"
+                                )
+                            }
 
-    FondoLeon {
-        Scaffold(
-            containerColor = Color.Transparent,
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            "Puntos de interés ciudad de León",
-                            fontWeight = FontWeight.SemiBold
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("Favoritos") },
+                                    onClick = {
+                                        expanded = false
+                                        navigator.push(FavoritosScreen())
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Contacto") },
+                                    onClick = {
+                                        expanded = false
+                                        navigator.push(ContactoScreen())
+                                    }
+                                )
+
+                            }
+                            IconButton(
+                                onClick = { 
+                                    navigator.replaceAll(BienvenidaScreen()) 
+                                },
+                                modifier = Modifier.padding(end = 12.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.salida),
+                                    contentDescription = "Salir",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.Black.copy(alpha = 0.4f),
+                            titleContentColor = Color.White,
+                            actionIconContentColor = Color.White
                         )
-                    },
 
-                    actions = {
 
-                        var expanded by remember { mutableStateOf(false) }
-                        IconButton(onClick = { expanded = true }) {
-                            Icon(
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = "Abrir menú"
-                            )
-                        }
-
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false } //cerrar menu al tocar fuera de el
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Favoritos") },
-                                onClick = {
-                                    expanded = false
-                                    onVerFavoritosClick()
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Contacto") },
-                                onClick = {
-                                    expanded = false
-                                    onVerContactoClick()
-                                }
-                            )
-
-                        }
-                        IconButton(
-                            onClick = onVolverInicioClick,
-                            modifier = Modifier.padding(end = 12.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.salida),
-                                contentDescription = "Salir",
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Black.copy(alpha = 0.4f),
-                        titleContentColor = Color.White,
-                        actionIconContentColor = Color.White
                     )
-
-
-                )
-            }
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
-                contentAlignment = Alignment.Center
-            ) {
-                if (uiState.isLoading) {
-                    CircularProgressIndicator()
-                } else if (uiState.error != null) {
-                    Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
-                } else {
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(minSize = 300.dp),
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(uiState.elemento) { elemento ->
-                            ElementoItem(
-                                elemento = elemento,
-                                onClick = {
-                                    onElementoClick(elemento.id)
-                                }
-                            )
+                }
+            ) { paddingValues ->
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (uiState.isLoading) {
+                        CircularProgressIndicator()
+                    } else if (uiState.error != null) {
+                        Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
+                    } else {
+                        LazyVerticalGrid(
+                            columns = GridCells.Adaptive(minSize = 300.dp),
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            items(uiState.elemento) { elemento ->
+                                ElementoItem(
+                                    elemento = elemento,
+                                    onClick = {
+                                        navigator.push(DetalleScreen(elemento.id))
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -162,7 +166,6 @@ fun ListadoScreen(
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
