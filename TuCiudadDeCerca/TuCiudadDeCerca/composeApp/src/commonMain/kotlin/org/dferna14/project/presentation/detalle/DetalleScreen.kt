@@ -63,7 +63,6 @@ data class DetalleScreen(val id: String) : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         
-        // CORREGIDO: Usamos koinViewModel() en lugar de koinScreenModel()
         val viewModel = koinViewModel<DetalleVM> { parametersOf(id) }
         
         val uiState by viewModel.uiState.collectAsState()

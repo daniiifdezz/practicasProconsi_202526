@@ -43,7 +43,6 @@ class FavoritosScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         
-        // CORREGIDO: Usamos koinViewModel() en lugar de koinScreenModel()
         val viewModel = koinViewModel<FavoritosVM>()
         
         val uiState by viewModel.uiState.collectAsState()

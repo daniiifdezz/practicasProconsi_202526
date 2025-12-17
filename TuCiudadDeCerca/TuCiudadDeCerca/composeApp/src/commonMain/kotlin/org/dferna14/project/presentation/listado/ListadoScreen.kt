@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -15,26 +16,26 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,6 +47,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
+import kotlinx.coroutines.launch
 import org.dferna14.project.domain.model.Elemento
 import org.dferna14.project.presentation.ListadoVM
 import org.dferna14.project.presentation.contacto.ContactoScreen
@@ -64,100 +66,117 @@ class ListadoScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        
-        // CORREGIDO: Usamos koinViewModel() en lugar de koinScreenModel()
         val viewModel = koinViewModel<ListadoVM>()
-        
         val uiState by viewModel.uiState.collectAsState()
 
-        FondoLeon {
-            Scaffold(
-                containerColor = Color.Transparent,
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                "Puntos de interés ciudad de León",
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        },
+        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
 
-                        actions = {
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet {
+                    Spacer(Modifier.height(32.dp))
+                    
 
-                            var expanded by remember { mutableStateOf(false) }
-                            IconButton(onClick = { expanded = true }) {
-                                Icon(
-                                    imageVector = Icons.Default.MoreVert,
-                                    contentDescription = "Abrir menú"
-                                )
+                    Text(
+                        text = "Favoritos",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                scope.launch { drawerState.close() }
+                                navigator.push(FavoritosScreen())
                             }
+                            .padding(24.dp),
+                        style = MaterialTheme.typography.titleMedium
+                    )
 
-                            DropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false }
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text("Favoritos") },
-                                    onClick = {
-                                        expanded = false
-                                        navigator.push(FavoritosScreen())
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Contacto") },
-                                    onClick = {
-                                        expanded = false
-                                        navigator.push(ContactoScreen())
-                                    }
-                                )
-
+                    Text(
+                        text = "Contacto",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                scope.launch { drawerState.close() }
+                                navigator.push(ContactoScreen())
                             }
-                            IconButton(
-                                onClick = { 
-                                    navigator.replaceAll(BienvenidaScreen()) 
-                                },
-                                modifier = Modifier.padding(end = 12.dp)
-                            ) {
-                                Icon(
-                                    painter = painterResource(Res.drawable.salida),
-                                    contentDescription = "Salir",
-                                    modifier = Modifier.size(24.dp)
-                                )
-                            }
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Black.copy(alpha = 0.4f),
-                            titleContentColor = Color.White,
-                            actionIconContentColor = Color.White
-                        )
-
-
+                            .padding(24.dp),
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
-            ) { paddingValues ->
-                Box(
-                    modifier = Modifier.fillMaxSize().padding(paddingValues),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (uiState.isLoading) {
-                        CircularProgressIndicator()
-                    } else if (uiState.error != null) {
-                        Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
-                    } else {
-                        LazyVerticalGrid(
-                            columns = GridCells.Adaptive(minSize = 300.dp),
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            items(uiState.elemento) { elemento ->
-                                ElementoItem(
-                                    elemento = elemento,
-                                    onClick = {
-                                        navigator.push(DetalleScreen(elemento.id))
-                                    }
+            }
+        ) {
+            FondoLeon {
+                Scaffold(
+                    containerColor = Color.Transparent,
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                Text(
+                                    "Puntos de interés León",
+                                    fontWeight = FontWeight.SemiBold,
+                                    style = MaterialTheme.typography.titleMedium
                                 )
+                            },
+                            navigationIcon = {
+                                IconButton(onClick = {
+                                    scope.launch {
+                                        if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                                    }
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Menu,
+                                        contentDescription = "Abrir menú",
+                                        tint = Color.White
+                                    )
+                                }
+                            },
+                            actions = {
+                                IconButton(
+                                    onClick = { 
+                                        navigator.replaceAll(BienvenidaScreen()) 
+                                    },
+                                    modifier = Modifier.padding(end = 12.dp)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(Res.drawable.salida),
+                                        contentDescription = "Salir",
+                                        modifier = Modifier.size(24.dp),
+                                        tint = Color.White
+                                    )
+                                }
+                            },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Black.copy(alpha = 0.4f),
+                                titleContentColor = Color.White,
+                                actionIconContentColor = Color.White
+                            )
+                        )
+                    }
+                ) { paddingValues ->
+                    Box(
+                        modifier = Modifier.fillMaxSize().padding(paddingValues),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (uiState.isLoading) {
+                            CircularProgressIndicator(color = Color.White)
+                        } else if (uiState.error != null) {
+                            Text("Error: ${uiState.error}", color = MaterialTheme.colorScheme.error)
+                        } else {
+                            LazyVerticalGrid(
+                                columns = GridCells.Adaptive(minSize = 300.dp),
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                items(uiState.elemento) { elemento ->
+                                    ElementoItem(
+                                        elemento = elemento,
+                                        onClick = {
+                                            navigator.push(DetalleScreen(elemento.id))
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
