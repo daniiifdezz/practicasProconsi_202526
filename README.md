@@ -120,6 +120,12 @@ El proyecto implementa un manejo centralizado de errores mediante `AppError`.
  - **Gestión de Estado de UI:** Se utiliza una `data class` de estado (ej: `ElementoUI`, `DetalleUiState`) por cada pantalla para representar de forma inmutable todo lo que la vista necesita saber (si está cargando, si hay un error, o los datos a mostrar).
 ​
 
-## Nota sobre el Proceso de Aprendizaje
+## Nota sobre el Proceso de Aprendizaje 
 
 El desarrollo de esta aplicación se ha complementado con la realización de ejercicios de iniciación previos. Estos ejercicios han sido fundamentales para comprender los conceptos básicos y la sintaxis del lenguaje Kotlin antes de abordar la arquitectura y los patrones complejos implementados en este proyecto.
+
+
+## Descargas
+
+- [Descargar APK Android](https://github.com/daniiifdezz/practicasProconsi_202526/releases/download/v1.0.0/TuCiudadDeCerca.apk)
+- [Descargar Instalador Windows (.msi)](https://github.com/daniiifdezz/practicasProconsi_202526/releases/download/v1.0.0/TuCiudadDeCerca-1.0.0.msi)
