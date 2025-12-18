@@ -127,5 +127,5 @@ El desarrollo de esta aplicación se ha complementado con la realización de eje
 
 ## Descargas
 
-- [Descargar APK Android](https://github.com/daniiifdezz/practicasProconsi_202526/releases/download/v1.0.0/TuCiudadDeCerca.apk)
-- [Descargar Instalador Windows (.msi)](https://github.com/daniiifdezz/practicasProconsi_202526/releases/download/v1.0.0/TuCiudadDeCerca-1.0.0.msi)
+- [Descargar APK Android](https://github.com/daniiifdezz/practicasProconsi_202526/releases/download/v1.0.1/TuCiudadDeCerca.apk)
+- [Descargar Instalador Windows (.msi)](https://github.com/daniiifdezz/practicasProconsi_202526/releases/download/v1.0.1/TuCiudadDeCerca-1.0.0.msi)
