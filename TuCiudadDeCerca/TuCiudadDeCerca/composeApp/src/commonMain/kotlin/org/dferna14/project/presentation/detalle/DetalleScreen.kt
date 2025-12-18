@@ -63,7 +63,8 @@ data class DetalleScreen(val id: String) : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         
-        val viewModel = koinViewModel<DetalleVM> { parametersOf(id) }
+        // CORREGIDO: Añadimos 'key = id' para asegurar que Koin crea una instancia única por ID
+        val viewModel = koinViewModel<DetalleVM>(key = id) { parametersOf(id) }
         
         val uiState by viewModel.uiState.collectAsState()
 
@@ -109,9 +110,7 @@ data class DetalleScreen(val id: String) : Screen {
                         }
                     }
 
-
-
-                            is DetalleUiState.Success -> {
+                    is DetalleUiState.Success -> {
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
